@@ -1,1 +1,77 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 500px;
+    margin: 50px auto;
+}
 
+h2 .title {
+    align-content: center;
+}
+
+#chat-widget {
+    border: 1px solid #dddd;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+#chat-log {
+    height: 350px;
+    overflow-y: auto;
+    border-bottom: 1px solid #eeee;
+    margin-bottom: 12px;
+}
+
+.msg {
+    margin-bottom: 6px;
+    padding: 10px 14px;
+    border-radius: 18px;
+    word-wrap: break-word;
+    font-size: 15px;
+    line-height: 1.4;
+    clear: both;
+}
+
+.user {
+    background: #007aff;
+    color: white;
+    border-bottom-right-radius: 4px;
+    max-width: 80%;
+    width: fit-content;
+    margin-left: auto;
+    text-align: right;
+}
+
+.bot {
+    color: black;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+
+.input-area {
+    display: flex;
+    gap: 8px;
+    border-radius: 1px;
+}
+
+#user-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+}
+
+button {
+    padding: 10px 16px;
+    border: 1px solid;
+    border-radius: 20px;
+    background: #007aff;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: white;
+    color: #007aff;
+    border-color: #007aff;
+    border: #007aff solid 1px;
+}
