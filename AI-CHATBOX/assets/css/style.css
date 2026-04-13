@@ -19,7 +19,13 @@ body {
     padding: 0;
 }
 
-/* Header kecil (optional - boleh buang kalau tak nak) */
+h2 {
+    margin-top: 20px;
+    padding-bottom: 15px;
+    padding-left: 10px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
 .chat-header {
     padding: 16px;
     text-align: center;
@@ -33,7 +39,6 @@ body {
     font-weight: 600;
 }
 
-/* Chat widget - full container */
 #chat-widget { 
     background: white;
     display: flex;
@@ -47,7 +52,6 @@ body {
     box-shadow: none;
 }
 
-/* Chat log - scrollable area, ambil semua ruang */
 #chat-log { 
     flex: 1;
     overflow-y: auto; 
@@ -57,7 +61,6 @@ body {
     background: white;
 }
 
-/* Messages */
 .msg { 
     margin: 6px 0; 
     padding: 10px 14px; 
@@ -83,7 +86,6 @@ body {
     border-bottom-left-radius: 4px;
 }
 
-/* Input area - sentiasa di bawah */
 .input-area { 
     display: flex; 
     gap: 8px; 
@@ -109,7 +111,7 @@ body {
 
 button { 
     padding: 10px 18px; 
-    border: none; 
+    border: solid 1px; 
     border-radius: 24px; 
     background: #007aff; 
     color: white; 
@@ -120,7 +122,10 @@ button {
 }
 
 button:hover {
-    background: #005bb5;
+    background: white;
+    border: #007aff solid 1px;
+    color: #007aff;
+
 }
 
 button.mic { 
@@ -129,5 +134,7 @@ button.mic {
 }
 
 button.mic:hover {
-    background: #2aa84d;
+    background: white;
+    border: #34c759 solid 1px;
+    color: #34c759;
 }
