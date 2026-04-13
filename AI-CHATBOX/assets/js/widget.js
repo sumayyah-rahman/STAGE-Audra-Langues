@@ -1,3 +1,4 @@
+// INPUT VOICE
 function startVoice() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -22,6 +23,7 @@ function startVoice() {
     recognition.start();
 }
 
+// OUTPUT VOICE
 function speakText(text) {
     if (!window.speechSynthesis) return;
     const utterance = new SpeechSynthesisUtterance(text);
@@ -30,6 +32,7 @@ function speakText(text) {
     window.speechSynthesis.speak(utterance);
 }
 
+// MESSAGE BUBBLES
 function addMessage(text, sender) {
     const log = document.getElementById('chat-log');
     if (!log) {
@@ -43,39 +46,64 @@ function addMessage(text, sender) {
     log.scrollTop = log.scrollHeight;
 }
 
-function sendMessage() {
+// SEND MESSAGE
+async function sendMessage() {
     const input = document.getElementById('user-input');
-    if (!input) {
-        console.error("❌ user-input NOT FOUND!");
-        return;
-    }
-    
     const userText = input.value.trim();
     if (!userText) return;
     
     addMessage(userText, 'user');
     input.value = '';
     
-    const botReply = getAIResponse(userText);
+    const botReply = await getAIResponse(userText);
+
     addMessage(botReply, 'bot');
     speakText(botReply);
 }
 
-function getAIResponse(userMessage) {
-    const msg = userMessage.toLowerCase();
-    
-    if (msg.includes('hello') || msg.includes('hi')) {
-        return "Hello there! How are you doing today?";
-    } else if (msg.includes('how are you')) {
-        return "I'm doing great! What about you?";
-    } else if (msg.includes('name')) {
-        return "I'm your English conversation partner. Call me ChatBot!";
-    } else {
-        return "That's interesting! Tell me more.";
+// BOT'S BRAIN
+async function getAIResponse(userMessage) {    
+    try {
+        const response = await fetch("../../api/chat.php",
+            {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: userMessage
+                })
+            }
+        );
+
+
+        const rawText = await response.text();
+        console.log("Raw backend response:", rawText);
+
+        const data = JSON.parse(rawText);
+        console.log("Backend Response:", data);
+        
+        if (data.reply) {
+            return data.reply;
+        }
+        
+        if (data.error) {
+            console.error("Gemini API Error:", data.error);
+            return "Sorry, can you repeat that?";
+        }
+        
+        return "I don't understand. Can you rephrase the sentence?";
+        
+    } catch (error) {
+        console.error("Network Error:", error);
+        return "Connection problem. Try again.";
     }
 }
 
-// Setup event listeners bila page dah load
+
+
+
+// EVENT LISTENERS
 document.addEventListener('DOMContentLoaded', () => {
     console.log("✅ Widget initialized!");
     
