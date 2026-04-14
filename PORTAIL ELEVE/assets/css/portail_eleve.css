@@ -1,142 +1,88 @@
-INSTRUCTION DE RÉDACTION
+/* ------------- STYLE GENERAL ------------- */
+* {
+  box-sizing: border-box;
+}
 
-Tu rédiges uniquement le programme final.
-Tu ne reproduis pas les consignes.
-Tu ne mentionnes ni la fiche source, ni les instructions, ni ton raisonnement.
-Tu ne poses aucune question.
-Tu n’ajoutes aucun commentaire final.
-Tu ne proposes pas d’autre version.
-Tu ne termines pas par une phrase du type « je peux aussi… ».
-Tu livres directement une version quasi définitive, prête à être copiée dans Word.
+body {
+    margin:0; font-family:"Segoe UI",Tahoma,sans-serif;
+    background:linear-gradient(135deg,#f0f4ff,#d9e6ff);
+    display:flex; 
+    align-items:center; 
+    justify-content:center;
+    height:100vh;
+}
 
-RÈGLES DE RÉDACTION
+/* ------------- PORTAIL_ELEVE.PHP ------------- */
+.login-container {
+    background:#fff;
+    padding:28px 24px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+    text-align:center;
+    width:100%;
+    max-width:340px;
+}
 
-STYLE AUDRA ATTENDU
+.login-container img { 
+    width:120px; 
+    margin-bottom:14px; 
+}
 
-- Le style attendu est celui d’un programme Audra Langues :
-  - ton administratif, pédagogique, sobre et professionnel ;
-  - structure stable et normée ;
-  - rédaction directement exploitable dans Word ;
-  - rubriques homogènes et proches du programme type Audra ;
-  - pas de commentaire final, pas de relance, pas de proposition alternative.
-- Le document final doit ressembler à un vrai programme de stage Audra et non à une note explicative.
-- Si la fiche source mentionne plusieurs stagiaires, rédiger tout le programme au pluriel.
-- Si la fiche source mentionne un seul stagiaire, rédiger tout le programme au singulier.
-- Ne jamais mélanger singulier et pluriel dans un même programme.
-- Ne pas utiliser de markdown parasite dans le résultat final : pas de **, pas de ##, pas de puces de titre en markdown.
-- Produire un texte propre, directement exploitable dans Word, avec une mise en forme simple et propre.
-- Ne pas afficher d’intitulés ou de symboles techniques inutiles.
-- Les rubriques génériques doivent être rédigées dans un style stable, propre et réutilisable.
-- Les parties variables doivent être contextualisées avec finesse à partir de la fiche source.
-- Respecter strictement la structure du programme type Audra.
-- Conserver des intitulés de rubriques proches de ceux du programme type Audra.
-- Le programme doit rester professionnel, crédible, sobre et conforme à la formation professionnelle.
-- Ne jamais prendre une orientation loisirs, même si certaines motivations réelles du stagiaire peuvent être plus personnelles.
-- Utiliser en priorité : l’intitulé du stage, la fonction du stagiaire, l’activité professionnelle / branche, l’objectif général, le niveau de départ et la durée contractuelle.
-- Si certaines informations sont absentes ou imprécises, rester prudent et ne pas inventer de détails excessifs.
-- Ne pas citer le nom du formateur dans le texte, sauf nécessité exceptionnelle.
-- Dans la rubrique « MODALITÉS TECHNIQUES, PÉDAGOGIQUES ET D’ENCADREMENT », ne pas centrer le texte sur le nom du formateur ; décrire plutôt le rôle du formateur, l’accompagnement, l’adaptation au stagiaire, la progression, les mises en situation, l’immersion, le feedback, le suivi individualisé et la contextualisation métier.
-- Dans la rubrique « OBJECTIFS PÉDAGOGIQUES DE LA FORMATION », formuler les objectifs sous la forme : « À l’issue de la formation, le stagiaire sera capable de : »
-- Rédiger ensuite une liste de 8 à 10 objectifs pédagogiques maximum.
-- Ces objectifs doivent être rédigés comme des capacités observables en situation professionnelle, sous forme d’actes de parole contextualisés.
-- Éviter les formulations trop générales du type « enrichir son vocabulaire », « gagner en aisance », « maîtriser la grammaire » si elles ne sont pas reliées à une situation professionnelle concrète.
-- Privilégier des formulations comme : accueillir, renseigner, demander, reformuler, expliquer, confirmer, rédiger, répondre, présenter, comprendre, traiter, transmettre, relancer.
-- Adapter ces objectifs au métier, au niveau de départ et à la durée de formation.
-- Le niveau à atteindre, les objectifs pédagogiques, les contenus, les thèmes grammaticaux, les difficultés, les types d’exercices et la progression doivent être déduits de manière réaliste à partir :
-  - du niveau de départ,
-  - de la durée contractuelle,
-  - du contexte professionnel,
-  - de la certification visée éventuelle.
-- Si le champ « Objectifs visés fin de formation » est vide, ne pas bloquer dessus.
-- Dans ce cas, déduire les objectifs pédagogiques, le parcours de formation et la progression à partir du profil professionnel du stagiaire, de son métier, du niveau de départ, du niveau visé, de la durée, de la langue, de la certification éventuelle et des compétences à cibler.
-- Ne pas surestimer la progression possible.
-- Le niveau à atteindre doit rester crédible, prudent et cohérent avec le niveau de départ, la durée du stage, la langue concernée et l’intensité réelle de la progression possible.
-- En matière de certification, ne rien inventer : si le champ « Certification visée » est renseigné dans la fiche source, l’utiliser ; s’il est vide, considérer qu’il n’y a pas de certification de fin de formation.
-- Pour certaines langues réputées plus difficiles pour un public francophone, notamment le russe, le chinois, le japonais et l’arabe, adopter une progression plus prudente à niveau d’entrée et volume horaire équivalents.
-- Un stagiaire de niveau A2 sur 20 heures ne doit pas avoir le même programme ni le même niveau de sortie qu’un stagiaire de niveau A2 sur 80 heures.
-- Le programme doit être rédigé dans un style administratif et pédagogique propre, proche des documents Audra.
-- Longueur cible : environ 2 à 3 pages Word maximum.
+h1 {
+    font-size:18px;
+    margin-bottom:14px;
+    color:#2563eb;
+}
 
-STRUCTURE ATTENDUE
+label { 
+    display:block; 
+    text-align:left; 
+    margin:12px 0 6px; 
+    font-weight:600; 
+    color:#333; 
+}
 
-Le programme doit comprendre au minimum les rubriques suivantes :
+input {
+    width:100%;
+    padding: 8px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    font-size:14px;
+}
 
-PROGRAMME DE STAGE : [Nom du stagiaire ou des stagiaires]
+input:focus { 
+    outline:none; 
+    border:1px solid #2563eb; 
+    box-shadow:0 0 4px rgba(37,99,235,.3); 
+}
 
-Nature de l’action de formation (art. L6313-1 du Code du travail) :
-Action de formation
+button {
+    width:100%; 
+    padding:12px; 
+    border:0; 
+    border-radius:10px; 
+    font-size:15px;
+    font-weight:700; 
+    cursor:pointer; 
+    background:#2563eb; 
+    color:#fff; 
+    margin-top:20px;
+}
 
-INTITULÉ DE LA FORMATION
+button:hover { 
+    background:#1e40af; 
+}
 
-PUBLIC VISÉ
+.password-wrapper { 
+    position:relative; 
+}
 
-PRÉ-REQUIS
-
-TEST DE POSITIONNEMENT SUR LE CECRL AVANT LA FORMATION
-
-NIVEAU DE DÉPART
-
-NIVEAU À ATTEINDRE
-
-DURÉE en Heures
-
-DATE DE DÉMARRAGE
-
-DATE DE FIN
-
-OBJECTIF OPÉRATIONNEL
-
-OBJECTIFS PÉDAGOGIQUES DE LA FORMATION
-(8 à 10 objectifs maximum, rédigés en actes de parole contextualisés au domaine professionnel du client)
-
-PARCOURS DE FORMATION
-
-MODALITÉS TECHNIQUES, PÉDAGOGIQUES ET D’ENCADREMENT
-
-MODALITÉS D’ÉVALUATION EN COURS DE FORMATION
-
-MODALITÉS DE CERTIFICATION
-(si aucune certification n’est explicitement renseignée, rester prudent et le signaler proprement sans alourdir)
-
-MODALITÉS DE FINANCEMENT
-
-FICHE SOURCE
-
-N° cours : 20259
-N° devis : D26089
-Date devis : 18/03/2026
-
-Intitulé du stage : Anglais médical
-Intitulé interne du cours : GB/FIFPL MAESTRACCI/Mars 26
-
-Client : MAESTRACCI ISABELLE
-SIREN client : 
-Code NAF : 
-
-Stagiaire(s) : MAESTRACCI ISABELLE
-Fonction(s) : 
-Service(s) : 
-Email(s) : isabelle.maestracci@wanadoo.fr
-
-Activité professionnelle / branche : Santé / médical
-Poste / fonction du stagiaire : infirmière
-Mots-clés métier : accueil patient, prise de rendez-vous, vocabulaire médical courant, échanges professionnels, compréhension orale, téléphone
-Compétences à cibler : 
-Remarques admin : 
-
-Langue / matière : 
-Niveau de départ : A1
-Objectif général : Langue Professionnelle
-Certification visée : 
-
-Date début : 20/04/2026
-Date fin : 30/06/2026
-Durée contrat (h) : 30,00
-Lieu : Audra Langues
-Modalité : Présentiel
-Précision lieu : Dans les locaux Audra Langues
-Nombre de stagiaires : 1
-
-
-Méthode pédagogique : FACE A FACE PEDAGOGIQUE
-Objectifs visés fin de formation : 
+.toggle-eye {
+    position:absolute; 
+    right:12px; 
+    top:50%;
+    transform:translateY(-50%); 
+    cursor:pointer;
+    font-size:16px; 
+    color:#555;
+}
