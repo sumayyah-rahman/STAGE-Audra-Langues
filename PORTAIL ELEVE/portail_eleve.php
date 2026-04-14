@@ -1,8 +1,10 @@
 <?php
+// portail_eleve.php — page de connexion de l'élève
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../../app/security/firewall.php';
-$config = audra_bootstrap_prof_page(); // ou autre bootstrap commun si vous en avez un
+$config = audra_bootstrap_prof_page(); // adapter à un autre bootstrap s'il en existe un 
 
 if (($config['env'] ?? 'DEV') === 'DEV') {
     ini_set('display_errors', '1');
@@ -21,7 +23,7 @@ if (($config['env'] ?? 'DEV') === 'DEV') {
 <html>
     <head>
         <title>Portail Elève — Connexion</title>
-        <link rel="stylesheet" href="./assets/css/style.css">
+        <link rel="stylesheet" href="./assets/css/portail_eleve.css">
         <meta name="viewport" content="width=device-width, initial-scale=1">    
     </head>
     <body>
@@ -30,7 +32,7 @@ if (($config['env'] ?? 'DEV') === 'DEV') {
             <h1>Connexion</h1>
             <form id="loginForm">
                 <label for="login">Adresse email</label>
-                <input type="email" id="login" name="login" required>
+                <input type="text" id="login" name="login" required>
                 <label for="password">Mot de passe</label>
                 <div class="password-wrapper">
                     <input type="password" id="password" name="password" required>
