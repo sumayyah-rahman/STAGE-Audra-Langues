@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Portail Elève — Connexion</title>
+        <link rel="stylesheet" href="./assets/css/style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">    
+    </head>
+    <body>
+        <div class="login-container">
+            <img src="./assets/photos/audralangues-1.png" alt="Logo Audra Langues">
+            <h1>Connexion</h1>
+            <form id="loginForm">
+                <label for="login">Adresse email</label>
+                <input type="email" id="login" name="login" required>
+                <label for="password">Mot de passe</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" required>
+                    <span class="toggle-eye" onclick="togglePassword()">👁</span>
+                </div>
+                <button type="submit">Se connecter</button>
+            </form>
+        </div>
+        <script src="./assets/js/script.js"></script>
+</body>
+</html>
