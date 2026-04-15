@@ -18,7 +18,7 @@ h1 {
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	width: 130px;
+	width: 150px;
 	background-color: #f1f1f1;
 	height: 100%;
 	position: fixed;
@@ -38,7 +38,7 @@ h1 {
 	text-decoration: none;
 }
 
-.nav-bar li a:hover {
+.nav-bar li a:hover, .nav-bar .active {
 	background-color: #2563eb;
 	color: white;
 }
@@ -52,7 +52,7 @@ h1 {
 .page {
 	max-width: 1100px;
 	margin: 0 auto;
-	margin-left: 130px;
+	margin-left: 150px;
 }
 
 .banner {
