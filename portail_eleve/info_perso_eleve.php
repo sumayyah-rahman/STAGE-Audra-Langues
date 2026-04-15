@@ -40,7 +40,7 @@ $typeFormation  = $_SESSION['type_formation'] ?? 'Présentiel';
 				<li><a href="cours_eleve.php">Cours</a></li>
 				<li><a href="entrainement_ia_eleve.php">Entraînement IA</a></li>
 				<li><a href="progres_eleve.php">Progrès</a></li>
-				<li><a href="info_perso_eleve.php">Info Perso.</a></li>
+				<li><a href="info_perso_eleve.php" class="active">Info Perso.</a></li>
 				<li><a href="deconnexion_eleve.php">Déconnexion</a></li>				
 			</ul>
 		</div>
