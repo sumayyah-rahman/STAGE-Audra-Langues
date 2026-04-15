@@ -36,7 +36,7 @@ $typeFormation  = $_SESSION['type_formation'] ?? 'Présentiel';
 		<div class="nav-bar">
 			<ul>
 				<li><img src="./assets/photos/audralangues-1.png" alt="Logo Audra Langues"></li>
-				<li><a href="dashboard_eleve.php">Accueil</a></li>
+				<li><a href="dashboard_eleve.php" class="active">Accueil</a></li>
 				<li><a href="cours_eleve.php">Cours</a></li>
 				<li><a href="entrainement_ia_eleve.php">Entraînement IA</a></li>
 				<li><a href="progres_eleve.php">Progrès</a></li>
