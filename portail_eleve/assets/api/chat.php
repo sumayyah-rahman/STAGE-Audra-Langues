@@ -116,6 +116,7 @@ STRICT RULES FORMAT:
 - Answer in 2 to 4 sentences maximum.
 - Ask only one question at the end.
 - Your response must always be short, natural and adapted to an oral conversation.
+- Only correct grammatical errors when it is necessary.
 {$themeInstruction}
 TEXT;
 
