@@ -1,26 +1,9 @@
 <?php
-// cours_eleve.php — notes ou exercices de l'élève
+// dashboard_eleve.php — tableau de bord de l'élève
 
 declare(strict_types=1);
 
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-}
-
-if (empty($_SESSION['student_logged'])) {
-    header('Location: portail_eleve.php');
-    exit;
-}
-
-$studentName    = $_SESSION['student_name']   ?? 'Sumayyah MAR';
-$teacherName    = $_SESSION['teacher_name']   ?? 'Munirah MAR';
-$numeroCours    = $_SESSION['course_number']  ?? '12345';
-$langueEtudiee  = $_SESSION['langue_etudiee'] ?? 'English';
-$niveauActuel   = $_SESSION['niveau_actuel']  ?? 'B2';
-$niveauVise     = $_SESSION['niveau_vise']    ?? 'C1';
-$objectifs      = $_SESSION['objectifs']      ?? 'langue professionnelle';
-$contexte       = $_SESSION['contexte']       ?? ['médical', 'nourriture', 'avis'];
-$typeFormation  = $_SESSION['type_formation'] ?? 'Présentiel';
+require_once __DIR__ . '/session_eleve.php';
 ?>
 
 <!DOCTYPE html>
@@ -37,7 +20,6 @@ $typeFormation  = $_SESSION['type_formation'] ?? 'Présentiel';
 			<ul>
 				<li><img src="./assets/photos/audralangues-1.png" alt="Logo Audra Langues"></li>
 				<li><a href="dashboard_eleve.php" class="active">Accueil</a></li>
-				<li><a href="cours_eleve.php">Cours</a></li>
 				<li><a href="entrainement_ia_eleve.php">Entraînement IA</a></li>
 				<li><a href="progres_eleve.php">Progrès</a></li>
 				<li><a href="info_perso_eleve.php">Info Perso.</a></li>
@@ -57,11 +39,13 @@ $typeFormation  = $_SESSION['type_formation'] ?? 'Présentiel';
             </div>
 
             <section class="content-card">
-                <h2>Accueil</h2>
+                <h2>Vue d'ensemble des cours</h2>
 
                 <div class="toc-box">
-                <p>Aucun à voir maintenant</p>
-                </div>
+				<?php
+                echo '<p><a href="" style "text-decoration: none;">Aucun à voir maintenant</a></p>'; // programme PHP pour dynamiquement mettre à jour le contenu
+                ?>
+				</div>
             </section>
         </div>
         
@@ -90,6 +74,6 @@ $typeFormation  = $_SESSION['type_formation'] ?? 'Présentiel';
 
         <button class="ai-widget-btn" id="open-widget" title="Parler avec l'IA">💬</button>
 
-        <script src="./assets/js/dashboard_eleve.js"></script>
+        <script src="./assets/js/widget_ai_eleve.js"></script>
     </body>
 </html>
