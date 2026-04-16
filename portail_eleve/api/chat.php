@@ -7,7 +7,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-$apiKey = "isi_nanti";
+$apiKey = "key";
 
 if ($apiKey === "") {
     echo json_encode([
