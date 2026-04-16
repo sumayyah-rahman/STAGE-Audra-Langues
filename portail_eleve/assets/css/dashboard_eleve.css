@@ -46,6 +46,8 @@ h1 {
 .nav-bar li:last-child {
 	position: fixed;
 	bottom: 0px;
+	width: 150px;
+	left: 0;
 }
 
 /* ------------- CONTENT ------------- */
@@ -56,7 +58,7 @@ h1 {
 }
 
 .banner {
-	padding: 16px;
+	padding: 3px 16px;
 	border-radius:6px;
 	margin: 1rem 16px;
 	font-weight:bold;
@@ -96,8 +98,12 @@ h1 {
 .toc-box {
   border: 1px solid #d1d5db;
   border-radius: 10px;
-  padding: 18px 20px;
+  padding: 9px 20px;
   background: #f9fafb;
+}
+
+.toc-box p {
+	margin: 10px 10px;
 }
 
 .toc-box ul {
@@ -106,7 +112,7 @@ h1 {
 }
 
 .toc-box li {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   line-height: 1.5;
 }
 
@@ -133,7 +139,7 @@ h1 {
   position: fixed;
   right: 24px;
   bottom: 100px;
-  max-width: 80px;
+  max-width: calc(100vw - 32px);
   background: #ffffff;
   border: 1px solid #d1d5db;
   border-radius: 14px;
@@ -172,6 +178,7 @@ h1 {
 	padding:1.5rem;
 	margin-top: 0;
 	text-align: left;
+	max-width: 300px;
 }
 
 .ai-widget-body p {
@@ -274,6 +281,7 @@ h1 {
   margin-bottom: 10px;
   line-height: 1.4;
   font-size: 14px;
+  max-width: 200px;
 }
 
 .msg.bot {
@@ -290,9 +298,10 @@ h1 {
 }
 
 /* ------------- RESPONSIVE ------------- */
-@media (max-width: 768px) {
+@media (max-width: 700px) {
   .page {
     padding: 12px 16px 20px;
+	margin-left: 0;
   }
 
   .banner,
@@ -330,15 +339,28 @@ h1 {
   }
 
   .chat-controls {
-    flex-wrap: wrap;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: nowrap;
   }
 
   .chat-controls input {
-    width: 100%;
+    flex: 1;
+    min-width: 0;
   }
 
-  #mic-btn,
+  #mic-btn .mic {
+    width: 44px;
+    min-width: 44px;
+    padding: 10px;
+    flex: 0 0 auto;
+  }
+
   #send-btn {
-    flex: 1;
+    width: auto;
+    min-width: 44px;
+    padding: 10px 12px;
+    flex: 0 0 auto;
   }
 }
