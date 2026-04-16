@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const openBtn = document.getElementById('open-widget');
   const closeBtn = document.getElementById('close-widget');
   const widget = document.getElementById('ai-widget');
-  const themeButtons = document.querySelectorAll('.theme-btn');
   const widgetBody = document.querySelector('.ai-widget-body');
 
   if (!widgetBody) {
@@ -143,30 +142,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('user-input');
     const micBtn = document.getElementById('mic-btn');
 
+    async function sendCurrentMessage() {
+      const userText = input.value.trim();
+      if (!userText) return;
+
+      addMessage(userText, 'user');
+      input.value = '';
+
+      const botReply = await getAIResponse(userText, theme);
+      addMessage(botReply, 'bot');
+      speakText(botReply);
+    }
+
     if (sendBtn && input) {
-      sendBtn.addEventListener('click', async () => {
-        const userText = input.value.trim();
-        if (!userText) return;
+      sendBtn.addEventListener('click', sendCurrentMessage);
 
-        addMessage(userText, 'user');
-        input.value = '';
-
-        const botReply = await getAIResponse(userText, theme);
-        addMessage(botReply, 'bot');
-        speakText(botReply);
-      });
-
-      input.addEventListener('keypress', async (e) => {
+      input.addEventListener('keydown', async (e) => {
         if (e.key === 'Enter') {
-          const userText = input.value.trim();
-          if (!userText) return;
-
-          addMessage(userText, 'user');
-          input.value = '';
-
-          const botReply = await getAIResponse(userText, theme);
-          addMessage(botReply, 'bot');
-          speakText(botReply);
+          e.preventDefault();
+          await sendCurrentMessage();
         }
       });
     }
@@ -187,33 +181,68 @@ document.addEventListener('DOMContentLoaded', () => {
     Food: "Great! Let’s talk about food. What kind of food do you enjoy the most?",
     Family: "Great! Let’s talk about family. Who are you closest to in your family?",
     Hobbies: "Great! Let’s talk about hobbies. What do you like doing in your free time?",
-    "Daily Life" : "Great! Let’s talk about daily life. What do you usually do after waking up?",
-	Other: "Okay. So what do you want to talk about?"
+    "Daily Life": "Great! Let’s talk about daily life. What do you usually do after waking up?",
+    Other: "Okay. So what do you want to talk about?"
   };
 
-  // ---------- CHOIX DU THEME ----------
-  themeButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const theme = btn.textContent.trim();
-      const starter = starters[theme] || "Great! Let’s start speaking together.";
+  // ---------- AFFICHAGE THEMES ----------
+  function renderThemeSelection() {
+    widgetBody.innerHTML = `
+      <p>Hello! What would you like to talk about today?</p>
+      <div class="theme-btns">
+        <button type="button" class="theme-btn">Travel</button>
+        <button type="button" class="theme-btn">Shopping</button>
+        <button type="button" class="theme-btn">Work</button>
+        <button type="button" class="theme-btn">School</button>
+        <button type="button" class="theme-btn">Food</button>
+        <button type="button" class="theme-btn">Family</button>
+        <button type="button" class="theme-btn">Hobbies</button>
+        <button type="button" class="theme-btn">Daily Life</button>
+        <button type="button" class="theme-btn">Other</button>
+      </div>
+    `;
 
-      widgetBody.innerHTML = `
-        <p><strong>Topic selected:</strong> ${theme}</p>
+    bindThemeButtons();
+  }
 
-        <div id="chat-log" class="chat-log">
-          <div class="msg bot">${starter}</div>
-        </div>
+  function bindThemeButtons() {
+    const currentThemeButtons = document.querySelectorAll('.theme-btn');
 
-        <div class="chat-controls">
+    currentThemeButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const theme = btn.textContent.trim();
+        const starter = starters[theme] || "Great! Let’s start speaking together.";
+
+        widgetBody.innerHTML = `
+          <div class="widget-topbar">
+            <p class="topic-selected"><strong>Topic selected:</strong> ${theme}</p>
+            <button type="button" id="back-to-themes" class="back-btn">← Retour</button>
+          </div>
+
+          <div id="chat-log" class="chat-log">
+            <div class="msg bot">${starter}</div>
+          </div>
+
+          <div class="chat-controls">
             <input type="text" id="user-input" placeholder="Type or use the mic..." />
             <button type="button" id="send-btn">➜</button>
             <button type="button" id="mic-btn" class="mic">🎤</button>
-        </div>
-      `;
+          </div>
+        `;
 
-      bindChatControls(theme);
-      speakText(starter);
+        const backBtn = document.getElementById('back-to-themes');
+        if (backBtn) {
+          backBtn.addEventListener('click', () => {
+            renderThemeSelection();
+          });
+        }
+
+        bindChatControls(theme);
+        speakText(starter);
+      });
     });
-  });
-});
+  }
 
+  // ---------- INITIALISATION ----------
+  bindThemeButtons();
+});
