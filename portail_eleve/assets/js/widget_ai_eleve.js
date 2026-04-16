@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---------- APPEL BACKEND ----------
   async function getAIResponse(userMessage, theme = '') {
     try {
-      const response = await fetch('./api/chat.php', {
+      const response = await fetch('./assets/api/chat.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Family: "Great! Let’s talk about family. Who are you closest to in your family?",
     Hobbies: "Great! Let’s talk about hobbies. What do you like doing in your free time?",
     "Daily Life" : "Great! Let’s talk about daily life. What do you usually do after waking up?",
-	Other: "Okay. So what you want to talk about?"
+	Other: "Okay. So what do you want to talk about?"
   };
 
   // ---------- CHOIX DU THEME ----------
@@ -206,8 +206,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <div class="chat-controls">
             <input type="text" id="user-input" placeholder="Type or use the mic..." />
-            <button id="send-btn">➜</button>
-            <button id="mic-btn" class="mic">|၊||။|</button>
+            <button type="button" id="send-btn">➜</button>
+            <button type="button" id="mic-btn" class="mic">🎤</button>
         </div>
       `;
 
