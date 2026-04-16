@@ -7,7 +7,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-$apiKey = "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";
+$apiKey = "isi_nanti";
 
 if ($apiKey === "") {
     echo json_encode([
