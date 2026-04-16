@@ -1,18 +1,16 @@
 <?php
-// progres_eleve.php — progrès de l'élève
+// entrainement_ia_eleve.php — entraînement IA de l'élève
 
 declare(strict_types=1);
 
-$studentName = 'Sumayyah MAR';
-$teacherName = 'Munirah MAR';
-$numeroCours = '12345';
+require_once __DIR__ . '/session_eleve.php';
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
     <head>
         <meta charset="utf-8">
-        <title>Portail Elève — Progrès</title>
+        <title>Portail Elève — Entraînement IA</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="./assets/css/dashboard_eleve.css">
     </head>
@@ -22,7 +20,6 @@ $numeroCours = '12345';
 			<ul>
 				<li><img src="./assets/photos/audralangues-1.png" alt="Logo Audra Langues"></li>
 				<li><a href="dashboard_eleve.php">Accueil</a></li>
-				<li><a href="cours_eleve.php">Cours</a></li>
 				<li><a href="entrainement_ia_eleve.php" class="active">Entraînement IA</a></li>
 				<li><a href="progres_eleve.php">Progrès</a></li>
 				<li><a href="info_perso_eleve.php">Info Perso.</a></li>
@@ -71,6 +68,6 @@ $numeroCours = '12345';
 
         <button class="ai-widget-btn" id="open-widget" title="Parler avec l'IA">💬</button>
 
-        <script src="./assets/js/dashboard_eleve.js"></script>
+        <script src="./assets/js/widget_ai_eleve.js"></script>
     </body>
 </html>
