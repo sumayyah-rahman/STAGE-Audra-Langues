@@ -56,11 +56,6 @@ The aim of the project is to create an integrated learning environment for Audra
 - `assets/js/`: JavaScript scripts
 - `assets/api/chat.php`: AI communication backend
 
-
-## Important/ security
-Sangat penting sebab kau ada API.
-
-``md
 ## Security
 
 API keys should never be hard-coded in versioned code.
