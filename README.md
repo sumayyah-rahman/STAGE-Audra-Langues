@@ -34,7 +34,7 @@ The aim of the project is to create an integrated learning environment for Audra
 - student-side session management;
 - project structure designed for a future more complete integration.
 
-## Technologies utilisées
+## Technologies used
 
 - PHP
 - HTML
@@ -42,7 +42,7 @@ The aim of the project is to create an integrated learning environment for Audra
 - JavaScript
 - Sessions PHP
 - API Web Speech (SpeechRecognition / speechSynthesis)
-- Intégration API conversationnelle en cours
+- Conversational API integration in progress
 
 ## Project Structure
 
