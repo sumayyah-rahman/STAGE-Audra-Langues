@@ -1,13 +1,12 @@
 # Audra Languages – AI Student & Assistant Portal
 
-Student and teacher portal project with AI conversational assistant for English oral practice.
-The project includes a student area, an AI widget, a teacher portal start, as well as a backend architecture intended to be linked to a conversational API.
+Student portal project with AI conversational assistant for English oral practice.
+The project includes a student area, an AI widget, as well as a backend architecture intended to be linked to a conversational API.
 
 ## Goal
 
 The aim of the project is to create an integrated learning environment for Audra Languages, with:
 - a student portal;
-- a teacher portal;
 - an AI conversational assistant focused on oral practice;
 - a visual coherence with existing portals.
 
@@ -28,6 +27,8 @@ The aim of the project is to create an integrated learning environment for Audra
 - sending text messages;
 - integration of the browser’s speech synthesis;
 - integration of browser voice recognition.
+
+This widget was later removed due to the tutor's preferences of having the chats on a bigger screen.
 
 ### Backend
 - file `chat.php` prepared to link the widget to a conversational API;
@@ -60,6 +61,7 @@ The aim of the project is to create an integrated learning environment for Audra
 
 API keys should never be hard-coded in versioned code.
 Preferably use environment variables or an unexposed server file.
+In this case, I put the API key in `chat.php` as `key`.
 
 ## Project Status
 
@@ -68,13 +70,11 @@ The project is under development.
 Already completed:
 - structure of the student portal;
 - first version of the conversational widget;
-- teacher portal base;
 - student-side session logic.
 
 Coming soon:
 - full integration of the conversational API;
 - connection to real data;
-- finalization of the teacher mode;
 - improvement of voice mode management;
 - overall stabilization of the application.
 
@@ -94,8 +94,8 @@ Coming soon:
 ### Week 2—Creation of the student portal
 **Objective :** set up the student area, login page, dashboard, main navigation, and conversational widget integration.
 
-### Week 3—Creating the teacher mode
-**Objective :** start the teaching space in order to provide for educational continuity and consistency with the other portals of the platform.
+### Week 3—
+**Objective :** 
 
 ### Week 4—Finalization of the student pages and identification of the necessary data
 **Objective:** complete and structure the different pages of the student area, harmonize the interface, improve visual consistency, and start identifying the tables and fields needed for future database integration.
