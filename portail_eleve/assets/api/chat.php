@@ -7,6 +7,10 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
+$contexte = $_SESSION['contexte'] ?? [];
+
+$grammar = trim((string)($data['grammar'] ?? ''));
+
 $apiKey = "key";
 
 if ($apiKey === "") {
@@ -50,6 +54,16 @@ $prevResponseId = (string)($_SESSION['openai_previous_response_id'] ?? '');
 $themeInstruction = $theme !== ''
     ? "The chosen conversation topic is: {$theme}. Keep the conversation focused on this topic unless the student asks to change it."
     : "No topic has been chosen yet. Ask the student to choose a topic and then continue naturally.";
+
+$contextInstruction = '';
+if (!empty($contexte)) {
+    $contextText = is_array($contexte) ? implode(', ', $contexte) : (string)$contexte;
+    $contextInstruction = "The student's professional context is: {$contextText}. Keep the conversation coherent with this context when possible.";
+}
+
+$grammarInstruction = $grammar !== ''
+    ? "The grammar focus for this conversation is: {$grammar}. Lightly guide the student toward using it during the conversation when relevant."
+    : "No specific grammar focus has been chosen.";
 
 $systemInstruction = <<< TEXT
 You are a welcoming, calm and encouraging English teacher.
@@ -112,6 +126,8 @@ STRICT RULES FORMAT:
 - Your response must always be short, natural and adapted to an oral conversation.
 - Only correct grammatical errors when it is necessary.
 {$themeInstruction}
+{$contextInstruction}
+{$grammarInstruction}
 TEXT;
 
 $payload = [
