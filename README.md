@@ -86,13 +86,13 @@ They should be stored securely on the server side.
 ## Planning
 | Week   | Task                                             | Objective                                                                                                                       |
 | ------ | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| Week 1 | Validate chat functionality                      | Verify that the chatbot works correctly, that basic exchanges are possible, and that the conversation logic can be tested.      |
-| Week 2 | Create the student portal                        | Build the student area, the login page, the dashboard, the main navigation, and the AI training structure.                      |
-| Week 3 | Build the AI Training page                       | Create the main oral practice page where students can choose a topic and interact with the AI directly.                         |
-| Week 4 | Finalise student pages and context handling      | Complete and organise the student pages, improve visual coherence, and allow the user to define or enrich their own context.    |
-| Week 5 | Test and improve voice mode                      | Test voice usage, improve the oral behaviour of the chatbot, adjust delays, and verify conversation fluency.                    |
-| Week 6 | Integrate the database + responsive improvements | Progressively connect the portal to real data, especially student, teacher, and course information, and improve responsiveness. |
-| Week 7 | Fix issues and stabilise the application         | Correct remaining errors, improve reliability, and polish the final technical and visual details.                               |
+| W1 | Validate chat functionality                      | Verify that the chatbot works correctly, that basic exchanges are possible, and that the conversation logic can be tested.      |
+| W2 | Create the student portal                        | Build the student area, the login page, the dashboard, the main navigation, and the AI training structure.                      |
+| W3 | Build the AI Training page                       | Create the main oral practice page where students can choose a topic and interact with the AI directly.                         |
+| W4 | Finalise student pages and context handling      | Complete and organise the student pages, improve visual coherence, and allow the user to define or enrich their own context.    |
+| W5 | Test and improve voice mode                      | Test voice usage, improve the oral behaviour of the chatbot, adjust delays, and verify conversation fluency.                    |
+| W6 | Integrate the database + responsive improvements | Progressively connect the portal to real data, especially student, teacher, and course information, and improve responsiveness. |
+| W7 | Fix issues and stabilise the application         | Correct remaining errors, improve reliability, and polish the final technical and visual details.                               |
 | Buffer | Unexpected issues                                | Keep extra time for technical issues, requested adjustments, or delays.                                                         |
 
 ## Current status
