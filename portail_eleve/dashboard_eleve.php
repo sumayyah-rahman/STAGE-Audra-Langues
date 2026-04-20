@@ -20,7 +20,6 @@ require_once __DIR__ . '/session_eleve.php';
 			<ul>
 				<li><img src="./assets/photos/audralangues-1.png" alt="Logo Audra Langues"></li>
 				<li><a href="dashboard_eleve.php" class="active">Accueil</a></li>
-				<li><a href="cours_eleve.php">Cours</a></li>
 				<li><a href="entrainement_ia_eleve.php">Entraînement IA</a></li>
 				<li><a href="progres_eleve.php">Progrès</a></li>
 				<li><a href="info_perso_eleve.php">Info Perso.</a></li>
@@ -49,32 +48,7 @@ require_once __DIR__ . '/session_eleve.php';
 				</div>
             </section>
         </div>
-        
-        <div id="ai-widget" class="ai-widget hidden">
-            <div class="ai-widget-header">
-                <span>Assistant oral d'anglais</span>
-                <button type="button" id="close-widget" class="close-widget-btn">×</button>
-            </div>
-
-            <div class="ai-widget-body">
-                <p>Hello! What would you like to talk today?</p>
-                <div class="theme-btns">
-                    <button type="button" class="theme-btn">Travel</button>
-                    <button type="button" class="theme-btn">Shopping</button>
-                    <button type="button" class="theme-btn">Work</button>
-                    <button type="button" class="theme-btn">School</button>
-                    <button type="button" class="theme-btn">Food</button>
-                    <button type="button" class="theme-btn">Family</button>
-                    <button type="button" class="theme-btn">Hobbies</button>
-                    <button type="button" class="theme-btn">Daily Life</button>
-					<button type="button" class="theme-btn">Other</button>
-
-                </div>
-            </div>
-        </div>
-
-        <button class="ai-widget-btn" id="open-widget" title="Parler avec l'IA">💬</button>
-
+		
         <script src="./assets/js/widget_ai_eleve.js"></script>
     </body>
 </html>
