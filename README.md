@@ -1,39 +1,57 @@
-# Audra Languages – AI Student & Assistant Portal
+# Audra Langues – Student Portal & AI Oral Practice
 
-Student portal project with AI conversational assistant for English oral practice.
-The project includes a student area, an AI widget, as well as a backend architecture intended to be linked to a conversational API.
+This project is a student portal developed for Audra Langues, with a built-in AI conversation space for English oral practice.
 
-## Goal
+The goal is to provide students with a simple and coherent learning environment where they can:
+- log in to their personal space,
+- view their personal and course-related information,
+- practise spoken English with an AI assistant,
+- follow their learning progress.
 
-The aim of the project is to create an integrated learning environment for Audra Languages, with:
-- a student portal;
-- an AI conversational assistant focused on oral practice;
-- a visual coherence with existing portals.
+## Project scope
 
-## Current Features
+The current scope of the project focuses on the **student side only**.
 
-### Student Portal
-- login page;
-- student dashboard;
-- personal information page;
-- progress page;
-- AI training page;
-- conversational widget openable from the interface.
+Included:
+- student login page,
+- student dashboard,
+- personal information page,
+- progress page,
+- AI training page for oral conversation practice.
 
-### AI Widget
-- opening/closing the widget;
-- choice of a conversation theme;
-- display of the first message according to the chosen theme;
-- sending text messages;
-- integration of the browser’s speech synthesis;
-- integration of browser voice recognition.
+Not included anymore:
+- teacher portal,
+- separate “Courses” page,
+- floating AI widget.
 
-This widget was later removed due to the tutor's preferences of having the chats on a bigger screen.
+The AI conversation area is now integrated directly into the **AI Training** page instead of appearing as a widget.
 
-### Backend
-- file `chat.php` prepared to link the widget to a conversational API;
-- student-side session management;
-- project structure designed for a future more complete integration.
+## Main objective
+
+The main objective of the project is to create a functional student portal with an AI-based oral practice tool that:
+- encourages students to speak in English,
+- keeps the conversation natural,
+- lightly corrects grammar when needed,
+- stays focused on a chosen topic,
+- supports confidence and fluency.
+
+## Current features
+
+### Student portal
+- login page,
+- dashboard page,
+- personal information page,
+- progress page,
+- AI training page,
+- common logout system.
+
+### AI conversation area
+- topic selection before the conversation,
+- text input,
+- browser-based speech recognition,
+- browser-based text-to-speech,
+- backend connection through `chat.php`,
+- conversation flow prepared for OpenAI Responses API.
 
 ## Technologies used
 
@@ -41,73 +59,68 @@ This widget was later removed due to the tutor's preferences of having the chats
 - HTML
 - CSS
 - JavaScript
-- Sessions PHP
-- API Web Speech (SpeechRecognition / speechSynthesis)
-- Conversational API integration in progress
+- PHP sessions
+- Web Speech API
+  - `SpeechRecognition`
+  - `speechSynthesis`
+- OpenAI Responses API (integration in progress / being refined)
 
-## Project Structure
+## Project structure
 
-- `portail_commun.php` / `portail_eleve.php`login page
-- `dashboard_eleve.php`: Student dashboard
-- `entrainement_ia_eleve.php`: AI training page
-- `progres_eleve.php` progress page
-- `info_perso_eleve.php`: personal information
-- `cours_prof.php` Start of the teacher portal
-- `assets/css/` style sheets
-- `assets/js/`: JavaScript scripts
-- `assets/api/chat.php`: AI communication backend
+- `portail_commun.php` / login page
+- `dashboard_eleve.php`
+- `entrainement_ia_eleve.php`
+- `progres_eleve.php`
+- `info_perso_eleve.php`
+- `deconnexion_commune.php`
+- `session_eleve.php`
+- `assets/css/`
+- `assets/js/`
+- `assets/api/chat.php`
 
-## Security
+## Security note
 
-API keys should never be hard-coded in versioned code.
-Preferably use environment variables or an unexposed server file.
-In this case, I put the API key in `chat.php` as `key`.
+API keys must never be exposed in front-end code or committed to a public repository.
+They should be stored securely on the server side.
 
-## Project Status
+## Planning
+| Week   | Task                                             | Objective                                                                                                                       |
+| ------ | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| Week 1 | Validate chat functionality                      | Verify that the chatbot works correctly, that basic exchanges are possible, and that the conversation logic can be tested.      |
+| Week 2 | Create the student portal                        | Build the student area, the login page, the dashboard, the main navigation, and the AI training structure.                      |
+| Week 3 | Build the AI Training page                       | Create the main oral practice page where students can choose a topic and interact with the AI directly.                         |
+| Week 4 | Finalise student pages and context handling      | Complete and organise the student pages, improve visual coherence, and allow the user to define or enrich their own context.    |
+| Week 5 | Test and improve voice mode                      | Test voice usage, improve the oral behaviour of the chatbot, adjust delays, and verify conversation fluency.                    |
+| Week 6 | Integrate the database + responsive improvements | Progressively connect the portal to real data, especially student, teacher, and course information, and improve responsiveness. |
+| Week 7 | Fix issues and stabilise the application         | Correct remaining errors, improve reliability, and polish the final technical and visual details.                               |
+| Buffer | Unexpected issues                                | Keep extra time for technical issues, requested adjustments, or delays.                                                         |
 
-The project is under development.
+## Current status
 
-Already completed:
-- structure of the student portal;
-- first version of the conversational widget;
-- student-side session logic.
+### Already completed:
+- student portal base structure,
+- login page,
+- student dashboard,
+- personal information page,
+- progress page,
+- AI training page structure,
+- AI topic selection,
+- conversation frontend logic,
+- backend bridge for AI requests.
 
-Coming soon:
-- full integration of the conversational API;
-- connection to real data;
-- improvement of voice mode management;
-- overall stabilization of the application.
+### Still in progress:
+- OpenAI conversation tuning,
+- database integration,
+- voice mode stabilisation,
+- context management,
+- responsive refinements.
 
-## Roadmap
+## Notes
 
-- finalize the AI widget;
-- integrate the database;
-- complete the teacher portal;
-- improve responsiveness;
-- stabilize voice exchanges.
+The project evolved during development.
+Some initial ideas were simplified after discussion in order to:
 
-## Forecast schedule
-
-### Week 1—Validation of the chat functionality
-**Objective :** verify that the chatbot is working properly, that basic exchanges are possible, and that conversational logic can be tested.
-
-### Week 2—Creation of the student portal
-**Objective :** set up the student area, login page, dashboard, main navigation, and conversational widget integration.
-
-### Week 3—
-**Objective :** 
-
-### Week 4—Finalization of the student pages and identification of the necessary data
-**Objective:** complete and structure the different pages of the student area, harmonize the interface, improve visual consistency, and start identifying the tables and fields needed for future database integration.
-
-### Week 5—Testing and improving voice mode
-**Objective :** test voice usage, improve the chatbot’s oral behavior, adjust response times, and check the fluidity of exchanges.
-
-### Week 6—Integration of the database with the site + responsive
-**Objective :** gradually connect the portal to real data, particularly for student, teacher, and course information, based on the previous tracking carried out in previous weeks.
-
-### Week 7—Bug fixes and stabilization
-**Objective :** correct the remaining errors, make the overall operation more reliable, and improve the latest technical or visual details.
-
-### Buffer time—Contingency management
-**Objective :** keep room for technical issues, adjustments requested during the project or possible delays.
+- keep the product more coherent,
+- reduce unnecessary complexity,
+- focus on the student experience,
+- prioritise the AI oral practice page.
