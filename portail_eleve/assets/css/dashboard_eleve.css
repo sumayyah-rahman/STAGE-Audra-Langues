@@ -1,92 +1,94 @@
-/* ------------- STYLE GENERAL DASHBOARD ELEVE ------------- */
+/* =========================================================
+                            BASE
+========================================================= */
 * {
   box-sizing: border-box;
 }
 
- body{
-	font-family: "Segoe UI", Tahoma, sans-serif;
-	background: #f9fafb;
-	margin: 0;
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: #f9fafb;
+  color: #1f2937;
 }
 
 h1 {
-	font-size: 16px;
+  font-size: 16px;
+  margin: 0;
 }
 
-/* ------------- NAVIGATION BAR ------------- */
+/* =========================================================
+                        NAVIGATION BAR
+========================================================= */
 .nav-bar ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	width: 150px;
-	background-color: #f1f1f1;
-	height: 100%;
-	position: fixed;
-	overflow: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 150px;
+  background-color: #f1f1f1;
+  height: 100%;
+  position: fixed;
+  overflow: auto;
 }
 
 .nav-bar li img {
-	width: 120px;
-	height: 120px;
-	margin: 10px 15px;
+  width: 120px;
+  height: 120px;
+  margin: 10px 15px;
 }
 
 .nav-bar li a {
-	display: block;
-	color: black;
-	padding: 8px 16px;
-	text-decoration: none;
+  display: block;
+  color: #111827;
+  padding: 8px 16px;
+  text-decoration: none;
 }
 
-.nav-bar li a:hover, .nav-bar .active {
-	background-color: #2563eb;
-	color: white;
+.nav-bar li a:hover,
+.nav-bar .active {
+  background-color: #2563eb;
+  color: white;
 }
 
 .nav-bar li:last-child {
-	position: fixed;
-	bottom: 0px;
-	width: 150px;
-	left: 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 150px;
 }
 
-/* ------------- CONTENT ------------- */
+/* =========================================================
+                        PAGE LAYOUT
+========================================================= */
 .page {
-	max-width: 1100px;
-	margin: 0 auto;
-	margin-left: 150px;
+  max-width: 1100px;
+  margin: 0 auto;
+  margin-left: 150px;
+  padding-bottom: 24px;
 }
 
 .banner {
-	padding: 3px 16px;
-	border-radius:6px;
-	margin: 1rem 16px;
-	font-weight:bold;
-	background:#dcfce7;
-	color:#065f46;
+  padding: 8px 16px;
+  border-radius: 6px;
+  margin: 1rem 16px;
+  font-weight: bold;
+  background: #dcfce7;
+  color: #065f46;
 }
 
-.panel {
-	background: #fff;
-	padding:1.5rem;
-	margin: 1rem 16px;
-	border-radius:10px;
-    box-shadow:0 2px 6px rgba(0,0,0,.1);
-	text-align: left;
+.panel,
+.content-card {
+  background: #fff;
+  padding: 1.5rem;
+  margin: 1rem 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-align: left;
 }
 
 .panel p {
-	margin: 8px 0;
-	font-size: 16px;
-}
-
-.content-card {
-	background: #fff;
-	padding:1.5rem;
-	margin: 1rem 16px;
-	border-radius:10px;
-	box-shadow:0 2px 6px rgba(0,0,0,.1);
-	text-align: left;
+  margin: 8px 0;
+  font-size: 16px;
 }
 
 .content-card h2 {
@@ -98,211 +100,130 @@ h1 {
 .toc-box {
   border: 1px solid #d1d5db;
   border-radius: 10px;
-  padding: 9px 20px;
+  padding: 12px 16px;
   background: #f9fafb;
 }
 
 .toc-box p {
-	margin: 10px 10px;
+  margin: 10px 5px;
 }
 
-.toc-box ul {
+.toc-box ul,
+.toc-box ol {
   margin: 0;
   padding-left: 20px;
 }
 
 .toc-box li {
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   line-height: 1.5;
 }
 
-.toc-box .student-containers {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-gap: 0.5rem;
-  gap: 0.5rem;
+/* =========================================================
+                      TRAINING SETTINGS                     
+========================================================= */
+#theme-select,
+#grammar-select,
+#grammar-other-input {
+  width: 100%;
+  max-width: 340px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: #fff;
+  color: #1f2937;
 }
 
-.toc-box .student-containers .btn-voir-plus {
-	position: fixed;
-	margin-left: 0;
+#theme-select:focus,
+#grammar-select:focus,
+#grammar-other-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
-/* ------------- SEARCH-BOX ------------- */
-/* From Uiverse.io by alexruix */
-.content-card .group {
-	display: flex;
-	line-height: 28px;
-	align-items: center;
-	position: relative;
-	width: 100%;
-}
-
-.content-card .search-box {
-	width: 100%;
-	height: 40px;
-	line-height: 28px;
-	padding: 0 1rem;
-	padding-left: 2.5rem;
-	border: 2px solid transparent;
-	border-radius: 8px;
-	outline: none;
-	background-color: #f3f3f4;
-	color: #0d0c22;
-	transition: .3s ease;
-	margin-bottom: 10px;
-}
-
-.content-card .search-box::placeholder {
-	color: #9e9ea7;
-}
-
-.content-card .search-box:focus, search-box:hover {
-	outline: none;
-	border-color: #2563eb;
-	background-color: #fff;
-	box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.28);
-}
-
-.content-card .icon {
-	position: absolute;
-	left: 1rem;
-	fill: #9e9ea7;
-	width: 1rem;
-	height: 1rem;
-	margin-bottom: 10px;
-}
-/* ------------- WIDGET ------------- */
-.ai-widget-btn {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  width: 64px;
-  height: 64px;
+#start-training-btn {
+  width: auto;
+  margin-top: 8px;
+  padding: 10px 16px;
   border: none;
-  border-radius: 50%;
+  border-radius: 8px;
   background: #2563eb;
-  color: #ffffff;
-  font-size: 28px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.28);
 }
 
-.ai-widget-btn:hover {
+.training-controls {
+  margin-top: 8px;
+}
+
+#start-training-btn {
+  display: inline-block;
+  width: auto;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#start-training-btn:hover {
   background: #1d4ed8;
 }
-
-.ai-widget {
-  position: fixed;
-  right: 24px;
-  bottom: 100px;
-  max-width: calc(100vw - 32px);
-  background: #ffffff;
-  border: 1px solid #d1d5db;
-  border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.15);
-  overflow: hidden;
-  z-index: 1000;
-  height: auto;
 }
 
-.hidden {
-  display: none;
-}
-
-.ai-widget-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #2563eb;
-  color: #fff;
-  padding: 12px 16px;
-  font-weight: 600;
-}
-
-.close-widget-btn {
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-size: 22px;
-  cursor: pointer;
-  width: auto;
-  margin: 0;
-  padding: 0;
-}
-
-.ai-widget-body {
-	background: #fff;
-	padding: 10px;
-	margin-top: 0;
-	text-align: left;
-	width: auto;
-	max-width: 300px;
-}
-
-.ai-widget-body p {
+#training-meta {
   margin-top: 0;
-  font-size: 14px;
-  line-height: 1.5;
 }
 
-.theme-btns {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 5px;
-}
-
-.theme-btn {
-  width: auto;
-  margin: 0;
-  padding: 8px 12px;
+/* =========================================================
+                        CHAT AREA
+========================================================= */
+.chat-log {
+  min-height: 260px;
+  max-height: 420px;
+  overflow-y: auto;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
-  border: 1px solid #cbd5e1;
-  background: #f8fafc;
-  color: #1f2937;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
+  background: #f9fafb;
 }
 
-.theme-btn:hover {
-  background: #e0ecff;
-}
-
-.widget-topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
+.msg {
+  width: fit-content;
+  max-width: 85%;
+  padding: 10px 12px;
+  border-radius: 10px;
   margin-bottom: 10px;
-}
-
-.topic-selected {
-  margin: 0;
+  line-height: 1.4;
   font-size: 14px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
-.back-btn {
-  width: auto;
-  margin: 0;
-  padding: 6px 10px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  background: #f8fafc;
+.msg.bot {
+  background: #e0ecff;
   color: #1f2937;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
+  border-bottom-left-radius: 2px;
 }
 
-.back-btn:hover {
-  background: #e2e8f0;
+.msg.user {
+  margin-left: auto;
+  background: #dcfce7;
+  color: #065f46;
+  border-bottom-right-radius: 2px;
 }
 
 .chat-controls {
   display: flex;
-  gap: 5px;
+  gap: 8px;
   align-items: center;
   margin-top: 14px;
 }
@@ -343,53 +264,23 @@ h1 {
 
 #mic-btn {
   min-width: 44px;
+  width: 44px;
   padding: 10px;
   font-size: 18px;
   line-height: 1;
 }
 
 #send-btn {
-  width:auto;
+  min-width: 52px;
 }
 
-.chat-log {
-  max-height: 220px;
-  overflow-y: auto;
-  padding: 10px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background: #f9fafb;
-  margin-top: 12px;
-}
-
-.msg {
-  width: fit-content;
-  padding: 10px 12px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  line-height: 1.4;
-  font-size: 14px;
-  max-width: 200px;
-}
-
-.msg.bot {
-  background: #e0ecff;
-  color: #1f2937;
-  border-bottom-left-radius: 2px;
-}
-
-.msg.user {
-  margin-left: auto;
-  background: #dcfce7;
-  color: #065f46;
-  border-bottom-right-radius: 2px;
-}
-
-/* ------------- RESPONSIVE ------------- */
+/* =========================================================
+                        RESPONSIVE
+========================================================= */
 @media (max-width: 700px) {
   .page {
-    padding: 12px 16px 20px;
-	margin-left: 0;
+    margin-left: 0;
+    padding: 12px 0 20px;
   }
 
   .banner,
@@ -399,31 +290,7 @@ h1 {
   }
 
   .banner h1 {
-    font-size: 20px;
-  }
-
-  .ai-widget-btn {
-    right: 16px;
-    bottom: 16px;
-    width: 58px;
-    height: 58px;
-    font-size: 24px;
-  }
-
-  .ai-widget {
-    right: 12px;
-    left: 12px;
-    bottom: 80px;
-    width: auto;
-    max-width: none;
-  }
-
-  .ai-widget-btn {
-    right: 12px;
-    bottom: 12px;
-    width: 56px;
-    height: 56px;
-    font-size: 24px;
+    font-size: 18px;
   }
 
   .chat-controls {
@@ -438,25 +305,15 @@ h1 {
     min-width: 0;
   }
 
-  #mic-btn .mic {
+  #mic-btn {
     width: 44px;
     min-width: 44px;
-    padding: 10px;
     flex: 0 0 auto;
   }
 
   #send-btn {
     width: auto;
-    min-width: 44px;
-    padding: 10px 12px;
+    min-width: 52px;
     flex: 0 0 auto;
   }
 }
-
-
-
-
-
-
-
-
