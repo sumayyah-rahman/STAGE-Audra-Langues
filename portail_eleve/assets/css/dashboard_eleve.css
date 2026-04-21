@@ -122,9 +122,39 @@ h1 {
 /* =========================================================
                       TRAINING SETTINGS                     
 ========================================================= */
+.training-mode-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.mode-btn {
+  width: auto;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #1f2937;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mode-btn:hover,
+.mode-btn.active-mode {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+
+.training-controls {
+  margin-top: 16px;
+}
+
 #theme-select,
 #grammar-select,
-#grammar-other-input {
+#other-input {
   width: 100%;
   max-width: 340px;
   padding: 10px 12px;
@@ -138,49 +168,10 @@ h1 {
 
 #theme-select:focus,
 #grammar-select:focus,
-#grammar-other-input:focus {
+#other-input:focus {
   outline: none;
   border-color: #2563eb;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-}
-
-#start-training-btn {
-  width: auto;
-  margin-top: 8px;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  background: #2563eb;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.training-controls {
-  margin-top: 8px;
-}
-
-#start-training-btn {
-  display: inline-block;
-  width: auto;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  background: #2563eb;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-#start-training-btn:hover {
-  background: #1d4ed8;
-}
-}
-
-#training-meta {
-  margin-top: 0;
 }
 
 /* =========================================================
@@ -272,6 +263,33 @@ h1 {
 
 #send-btn {
   min-width: 52px;
+}
+
+.chat-choice-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.chat-choice-btn {
+  width: auto;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #1f2937;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chat-choice-btn:hover {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
 }
 
 /* =========================================================
