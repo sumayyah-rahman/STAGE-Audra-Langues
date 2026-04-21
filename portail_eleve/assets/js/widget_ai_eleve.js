@@ -1,35 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const themeSelect = document.getElementById('theme-select');
-  const grammarSelect = document.getElementById('grammar-select');
-  const startBtn = document.getElementById('start-training-btn');
-
-  const selectedTheme = document.getElementById('selected-theme');
-  const selectedGrammar = document.getElementById('selected-grammar');
-
   const chatLog = document.getElementById('chat-log');
   const userInput = document.getElementById('user-input');
   const sendBtn = document.getElementById('send-btn');
   const micBtn = document.getElementById('mic-btn');
 
+  const selectedMode = document.getElementById('selected-mode');
+  const selectedFocus = document.getElementById('selected-focus');
+
+  let currentMode = '';
   let currentTheme = '';
   let currentGrammar = '';
+  let waitingForFocus = false;
   let trainingStarted = false;
 
-  const starters = {
-    Travel: "Great! Let’s talk about travel. Where would you like to go on holiday?",
-    Shopping: "Great! Let’s talk about shopping. Do you enjoy shopping, or do you only shop when necessary?",
-    Work: "Great! Let’s talk about work. What kind of job would you like to do in the future?",
-    School: "Great! Let’s talk about school. What is your favourite subject, and why?",
-    Food: "Great! Let’s talk about food. What kind of food do you enjoy the most?",
-    Family: "Great! Let’s talk about family. Who are you closest to in your family?",
-    Hobbies: "Great! Let’s talk about hobbies. What do you like doing in your free time?",
-    "Daily Life": "Great! Let’s talk about daily life. What do you usually do after waking up?",
-    Other: "Okay. So what do you want to talk about?"
-  };
+  if (!chatLog) {
+    console.error('❌ chat-log introuvable');
+    return;
+  }
 
   function speakText(text) {
     if (!window.speechSynthesis) return;
-
     window.speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(text);
@@ -39,11 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function addMessage(text, sender) {
-    if (!chatLog) {
-      console.error('❌ chat-log introuvable');
-      return;
-    }
-
     const msg = document.createElement('div');
     msg.className = `msg ${sender}`;
     msg.textContent = text;
@@ -51,18 +36,56 @@ document.addEventListener('DOMContentLoaded', () => {
     chatLog.scrollTop = chatLog.scrollHeight;
   }
 
-  function clearChat() {
-    if (!chatLog) return;
-    chatLog.innerHTML = '';
+  function addChoiceButtons() {
+    const row = document.createElement('div');
+    row.className = 'chat-choice-row';
+    row.innerHTML = `
+      <button type="button" class="chat-choice-btn" data-mode="conversation">Conversation practice</button>
+      <button type="button" class="chat-choice-btn" data-mode="grammar">Grammar practice</button>
+      <button type="button" class="chat-choice-btn" data-mode="both">Both</button>
+    `;
+    chatLog.appendChild(row);
+
+    row.querySelectorAll('.chat-choice-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        currentMode = btn.dataset.mode || '';
+        waitingForFocus = true;
+
+        if (selectedMode) {
+          selectedMode.textContent =
+            currentMode === 'conversation' ? 'Conversation practice'
+            : currentMode === 'grammar' ? 'Grammar practice'
+            : currentMode === 'both' ? 'Both'
+            : 'Aucun';
+        }
+
+        row.remove();
+
+        let prompt = 'Great!';
+
+        if (currentMode === 'conversation') {
+          prompt = 'Great! What would you like to talk about today?';
+        } else if (currentMode === 'grammar') {
+          prompt = 'Great! What grammar point would you like to practise today?';
+        } else if (currentMode === 'both') {
+          prompt = 'Great! What would you like to talk about, and what grammar point would you like to practise?';
+        }
+
+        addMessage(prompt, 'bot');
+        speakText(prompt);
+
+        if (userInput) userInput.focus();
+      });
+    });
+
+    chatLog.scrollTop = chatLog.scrollHeight;
   }
 
   async function getAIResponse(userMessage, theme = '', grammar = '') {
     try {
       const response = await fetch('./assets/api/chat.php', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: userMessage,
           theme: theme,
@@ -85,20 +108,85 @@ document.addEventListener('DOMContentLoaded', () => {
         return "Sorry, the server response is invalid.";
       }
 
-      if (data.reply) {
-        return data.reply;
-      }
-
-      if (data.error) {
-        console.error('Backend Error:', data.error);
-        return "Sorry, can you repeat that?";
-      }
+      if (data.reply) return data.reply;
+      if (data.error) return "Sorry, can you repeat that?";
 
       return "I don't understand. Can you rephrase the sentence?";
     } catch (error) {
       console.error('Network Error:', error);
       return 'Problème de connexion. Réessaie dans un instant.';
     }
+  }
+
+  async function handleFocusMessage(userText) {
+	if (currentMode === 'conversation') {
+	currentTheme = userText;
+	currentGrammar = '';
+	if (selectedFocus) selectedFocus.textContent = currentTheme;
+	trainingStarted = true;
+
+	const botReply = await getAIResponse(userText, currentTheme, currentGrammar);
+	addMessage(botReply, 'bot');
+	speakText(botReply);
+	return;
+	}
+
+	if (currentMode === 'grammar') {
+	currentTheme = '';
+	currentGrammar = userText;
+	if (selectedFocus) selectedFocus.textContent = currentGrammar;
+	trainingStarted = true;
+
+	const botReply = await getAIResponse(userText, currentTheme, currentGrammar);
+	addMessage(botReply, 'bot');
+	speakText(botReply);
+	return;
+	}
+
+	if (currentMode === 'both') {
+	currentTheme = userText;
+	currentGrammar = userText;
+	if (selectedFocus) selectedFocus.textContent = userText;
+	trainingStarted = true;
+
+	const botReply = await getAIResponse(userText, currentTheme, currentGrammar);
+	addMessage(botReply, 'bot');
+	speakText(botReply);
+	return;
+	}
+  }
+
+  async function sendCurrentMessage() {
+    const userText = userInput.value.trim();
+    if (!userText) return;
+
+    addMessage(userText, 'user');
+    userInput.value = '';
+
+    if (!currentMode) {
+      const botReply = "Please choose what you would like to do first.";
+      addMessage(botReply, 'bot');
+      speakText(botReply);
+      addChoiceButtons();
+      return;
+    }
+
+    if (waitingForFocus) {
+      waitingForFocus = false;
+      await handleFocusMessage(userText);
+      return;
+    }
+
+    if (!trainingStarted) {
+      const botReply = "Please tell me first what topic or grammar point you would like to practise.";
+      addMessage(botReply, 'bot');
+      speakText(botReply);
+      return;
+    }
+
+    const botReply = await getAIResponse(userText, currentTheme, currentGrammar);
+    addMessage(botReply, 'bot');
+    speakText(botReply);
   }
 
   function startVoice() {
@@ -116,21 +204,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     recognition.onresult = async (event) => {
       const voiceText = event.results[0][0].transcript;
-
       if (!userInput) return;
 
       userInput.value = voiceText;
 
       setTimeout(async () => {
-        const userText = userInput.value.trim();
-        if (!userText) return;
-
-        addMessage(userText, 'user');
-        userInput.value = '';
-
-        const botReply = await getAIResponse(userText, currentTheme, currentGrammar);
-        addMessage(botReply, 'bot');
-        speakText(botReply);
+        await sendCurrentMessage();
       }, 2000);
     };
 
@@ -139,60 +218,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     recognition.start();
-  }
-
-  async function sendCurrentMessage() {
-    if (!trainingStarted) {
-      alert("Please choose a theme and click 'Commencer l'entraînement' first.");
-      return;
-    }
-
-    const userText = userInput.value.trim();
-    if (!userText) return;
-
-    addMessage(userText, 'user');
-    userInput.value = '';
-
-    const botReply = await getAIResponse(userText, currentTheme, currentGrammar);
-    addMessage(botReply, 'bot');
-    speakText(botReply);
-  }
-
-  if (startBtn) {
-    startBtn.addEventListener('click', () => {
-      currentTheme = themeSelect ? themeSelect.value.trim() : '';
-      currentGrammar = grammarSelect ? grammarSelect.value.trim() : '';
-
-      if (!currentTheme) {
-        alert("Please choose a theme before starting.");
-        return;
-      }
-
-      trainingStarted = true;
-
-      if (selectedTheme) {
-        selectedTheme.textContent = currentTheme || 'Aucun';
-      }
-
-      if (selectedGrammar) {
-        selectedGrammar.textContent = currentGrammar || 'Aucun';
-      }
-
-      clearChat();
-
-      let starter = starters[currentTheme] || "Great! Let’s start speaking together.";
-
-      if (currentGrammar) {
-        starter += ` We will also pay attention to ${currentGrammar}.`;
-      }
-
-      addMessage(starter, 'bot');
-      speakText(starter);
-
-      if (userInput) {
-        userInput.focus();
-      }
-    });
   }
 
   if (sendBtn) {
@@ -210,11 +235,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (micBtn) {
     micBtn.addEventListener('click', () => {
-      if (!trainingStarted) {
-        alert("Please choose a theme and click 'Commencer l'entraînement' first.");
-        return;
-      }
       startVoice();
     });
   }
+
+  // lancement initial
+  addChoiceButtons();
 });
