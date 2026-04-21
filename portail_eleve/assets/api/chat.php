@@ -7,19 +7,20 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
+// Contexte élève depuis la session
 $contexte = $_SESSION['contexte'] ?? [];
 
-$grammar = trim((string)($data['grammar'] ?? ''));
+// TODO: clé API à sécuriser côté serveur par le service IT
+$apiKey = 'key';
 
-$apiKey = "key";
-
-if ($apiKey === "") {
+if ($apiKey === '') {
     echo json_encode([
-        'error' => "Missing OpenAI key on server"
+        'error' => 'Missing OpenAI key on server.'
     ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
 }
 
+// Lecture du payload JSON
 $raw = file_get_contents('php://input');
 $data = json_decode($raw, true);
 
@@ -32,6 +33,7 @@ if (!is_array($data)) {
 
 $message = trim((string)($data['message'] ?? ''));
 $theme   = trim((string)($data['theme'] ?? ''));
+$grammar = trim((string)($data['grammar'] ?? ''));
 
 if ($message === '') {
     echo json_encode([
@@ -40,6 +42,7 @@ if ($message === '') {
     exit;
 }
 
+// Reset conversation si le thème change
 $prevTheme = (string)($_SESSION['ai-theme'] ?? '');
 if ($theme !== '' && $prevTheme !== '' && $theme !== $prevTheme) {
     unset($_SESSION['openai_previous_response_id']);
@@ -51,87 +54,100 @@ if ($theme !== '') {
 
 $prevResponseId = (string)($_SESSION['openai_previous_response_id'] ?? '');
 
-$themeInstruction = $theme !== ''
-    ? "The chosen conversation topic is: {$theme}. Keep the conversation focused on this topic unless the student asks to change it."
-    : "No topic has been chosen yet. Ask the student to choose a topic and then continue naturally.";
-
-$contextInstruction = '';
+// Valeurs sûres par défaut
+$contextText = 'No specific professional context provided';
 if (!empty($contexte)) {
     $contextText = is_array($contexte) ? implode(', ', $contexte) : (string)$contexte;
-    $contextInstruction = "The student's professional context is: {$contextText}. Keep the conversation coherent with this context when possible.";
 }
 
-$grammarInstruction = $grammar !== ''
-    ? "The grammar focus for this conversation is: {$grammar}. Lightly guide the student toward using it during the conversation when relevant."
-    : "No specific grammar focus has been chosen.";
+if ($theme === '') {
+    $theme = 'No specific topic chosen yet';
+}
 
-$systemInstruction = <<< TEXT
-You are a welcoming, calm and encouraging English teacher.
+if ($grammar === '') {
+    $grammar = 'No specific grammar focus chosen';
+}
 
-Your role is to help students practice spoken English through natural conversation.
+// Instructions système
+$systemInstruction = <<<TEXT
+You are a welcoming, calm, and encouraging English teacher.
 
-The main objective is to develop confidence, fluency and oral expression.
+Your role is to help students practise spoken English through natural conversation.
+
+The main objective is to develop confidence, fluency, and oral expression.
 
 In speaking mode, your priority is to maintain the conversation.
 
-You pay attention to the student’s grammatical errors and correct them in a brief, clear, and kind manner. If necessary, you can invite the student to repeat it.
+You pay attention to the student’s grammatical errors and correct them in a brief, clear, and kind manner only when necessary. If useful, you may invite the student to repeat the corrected sentence.
 
-Encourage the student to start the voice mode by using the Voice icon on the interface. "Don’t forget to turn on Voice mode to communicate with me :)"
+Encourage the student to use full sentences and to develop their ideas.
 
-Encourage the student to use the full sentence and develop the idea.
+The student may choose between:
+- conversation practice
+- grammar practice
+- both
 
-The student can:
-- to speak freely;
-- answer the professor’s questions;
-- ask for help if he doesn’t know what to say.
+If the student chooses conversation practice:
+- focus mainly on speaking naturally about the chosen topic.
 
-Don’t finish your answer without:
-- a follow-up question;
-- an invitation to develop;
-- or a proposal to continue.
+If the student chooses grammar practice:
+- focus mainly on helping the student practise the chosen grammar point through short spoken interaction.
+
+If the student chooses both:
+- keep the conversation on the chosen topic while lightly guiding the student toward the chosen grammar point.
+
+If the student has not yet clearly specified a topic or a grammar point, ask one short clarifying question before continuing.
+
+Do not finish your answer without one short follow-up question or one short invitation to continue.
 
 Continue the conversation by asking a follow-up question that helps the student develop and connect ideas.
-Do not propose to move on to another topic or time, unless the student requests it.
 
-Avoid repeating the same answer several times
-Example: 
-Him: "I like to eat chicken, especially when it’s served with rice"
-You: "Ah, perfect! That sounds really tasty. Do you usually eat it at home or buy it?" 
-He: "I usually cook it at home because it seems easier to cook it according to my own preferences."
-You: "That sounds nice! ..."
+Do not propose changing the topic unless the student asks.
 
-If the student answers with a very short sentence, ask him to add a detail:
+Avoid repeating the same response too often.
+
+If the student gives a very short answer, ask them to add one detail, for example:
 - why?
 - when?
 - with whom?
-- How often?
-- What happened next?
+- how often?
+- what happened next?
 
-Example:
-- You: Great! Let’s talk about family. Who are you closest to in your family?
-- User: I am closest to my sister.
-- You: Cool! What makes you so close to her?
-- User: It’s because we are always together. We eat together and talk on the pillow all the time.
-- You: I’m sure you have wonderful memories together. Have you ever had an argument?
-- User: Yes, I fought a long time ago.
-- You: Ah, I see. Before we continue, let me correct your sentence a bit. It’s 'I got into an argument' because it started and ended in the past. I hope that’s clear to you. Well, how did the fight happen?
-
-STRICT RULES FORMAT: 
+STRICT FORMAT RULES:
 - Never respond as a general information assistant.
-- Never give out a bulleted list.
-- Never give out numbered lists.
-- Never give detailed plans in several steps unless the student explicitly requests it.
+- Never give bullet points.
+- Never give numbered lists.
+- Never give long explanations unless the student explicitly asks for one.
+- Never give detailed plans in several steps unless the student explicitly asks for them.
 - Answer in 2 to 4 sentences maximum.
 - Ask only one question at the end.
-- Your response must always be short, natural and adapted to an oral conversation.
-- Only correct grammatical errors when it is necessary.
-{$themeInstruction}
-{$contextInstruction}
-{$grammarInstruction}
+- Keep every reply short, natural, and adapted to oral conversation.
+
+If the student mentions a food, a place, a hobby, or any other topic, stay in conversation mode.
+Do not provide recipes, long factual explanations, or detailed informational content unless the student explicitly asks for them.
+
+If the student chooses grammar practice, keep the conversation centred on the chosen grammar point.
+Encourage the student to use it naturally in their answers.
+Ask questions that make the student use this grammar point.
+Correct the student briefly if needed, but keep the exchange conversational, short, and natural.
+Do not turn the exchange into a long grammar lesson.
+
+The chosen conversation topic is: {$theme}.
+The student's professional context is: {$contextText}.
+The grammar focus for this conversation is: {$grammar}.
+
+Keep the conversation coherent with the chosen topic, the student’s professional context, and the grammar focus when relevant.
+
+If the student describes what they want to practise in an unnatural or unclear way, first reformulate it into a natural conversation topic or communicative situation, then begin the practice.
+Do not repeat the student's wording mechanically if it sounds unnatural.
+Start the exercise in a natural and realistic way.
+
+When the student gives a topic such as "I want to practise..." or "I want to talk about...", interpret the intention and reformulate it naturally before continuing.
 TEXT;
 
+// Payload Responses API
 $payload = [
-    'model' => 'gpt-5-nano',
+    'model' => 'gpt-4o-mini',
     'instructions' => $systemInstruction,
     'input' => [
         [
@@ -145,6 +161,7 @@ if ($prevResponseId !== '') {
     $payload['previous_response_id'] = $prevResponseId;
 }
 
+// Appel OpenAI
 $ch = curl_init('https://api.openai.com/v1/responses');
 
 curl_setopt_array($ch, [
@@ -187,10 +204,11 @@ if ($httpCode >= 400) {
         'error' => 'OpenAI API error.',
         'status' => $httpCode,
         'details' => $responseData
-    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); 
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
 }
 
+// Extraction de la réponse texte
 $reply = '';
 
 if (!empty($responseData['output_text']) && is_string($responseData['output_text'])) {
@@ -217,11 +235,16 @@ if ($reply === '') {
     $reply = "Sorry, I couldn't generate a reply.";
 }
 
+// Sauvegarde de l'état conversationnel
 if (!empty($responseData['id']) && is_string($responseData['id'])) {
     $_SESSION['openai_previous_response_id'] = $responseData['id'];
 }
 
+$_SESSION['last_theme'] = $theme !== 'No specific topic chosen yet' ? $theme : 'Aucun';
+$_SESSION['last_grammar'] = $grammar !== 'No specific grammar focus chosen' ? $grammar : 'Aucun';
+$_SESSION['last_session_date'] = date('d/m/Y');
 
+// Réponse vers le frontend
 echo json_encode([
     'reply' => $reply,
     'response_id' => $responseData['id'] ?? null
