@@ -12,15 +12,23 @@ if (empty($_SESSION['student_logged'])) {
     exit;
 }
 
+// Informations générales élèves 
 $studentName   = $_SESSION['student_name']   ?? 'Sumayyah MAR';
 $teacherName   = $_SESSION['teacher_name']   ?? 'Munirah MAR';
 $numeroCours   = $_SESSION['course_number']  ?? '12345';
+
+// Informations pédagogiques
 $langueEtudiee = $_SESSION['langue_etudiee'] ?? 'English';
 $niveauActuel  = $_SESSION['niveau_actuel']  ?? 'B2';
 $niveauVise    = $_SESSION['niveau_vise']    ?? 'C1';
 $objectifs     = $_SESSION['objectifs']      ?? 'langue professionnelle';
 $contexte      = $_SESSION['contexte']       ?? ['médical', 'nourriture', 'avis'];
 $typeFormation = $_SESSION['type_formation'] ?? 'Présentiel';
+
+// suivi IA
+$lastTheme = $_SESSION['last_theme'] ?? 'Aucun';
+$lastGrammar = $_SESSION['last_grammar'] ?? 'Aucun';
+$lastSessionDate = $_SESSION['last_session_date'] ?? 'Aucune';
 
 if (!is_array($contexte)) {
     $contexte = [$contexte];
