@@ -48,7 +48,5 @@ require_once __DIR__ . '/session_eleve.php';
 				</div>
             </section>
         </div>
-		
-        <script src="./assets/js/widget_ai_eleve.js"></script>
-    </body>
+	</body>
 </html>
