@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		<meta charset="UTF-8">
 		<title>Portail Élève — Connexion</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="./assets/css/portail_eleve.css">
+		<link rel="stylesheet" href="./assets/css/portail_eleve.css?v=2">
 	</head>
 	<body>
 		<div class="login-container">
@@ -106,6 +106,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 				<button type="submit">Se connecter</button>
 			</form>
+			
+			<div class="login-links">
+				<div class="login-link-row">
+					<p>C'est votre première connexion&nbsp;?</p>
+					<a href="creer_compte_eleve.php">Créer un compte</a>
+				</div>
+
+				<div class="login-link-row">
+					<p>Vous avez oublié votre mot de passe&nbsp;?</p>
+					<a href="mdp_oublie_eleve.php">Réinitialiser</a>
+				</div>
+			</div>
 		</div>
         <script src="./assets/js/portail_eleve.js"></script>
 	</body>
