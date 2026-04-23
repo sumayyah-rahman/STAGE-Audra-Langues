@@ -19,12 +19,7 @@ Included:
 - progress page,
 - AI training page for oral conversation practice.
 
-Not included anymore:
-- teacher portal,
-- separate “Courses” page,
-- floating AI widget.
-
-The AI conversation area is now integrated directly into the **AI Training** page instead of appearing as a widget.
+The AI conversation area is integrated directly into the **AI Training** page instead of appearing as a widget (first idea).
 
 ## Main objective
 
@@ -124,3 +119,7 @@ Some initial ideas were simplified after discussion in order to:
 - reduce unnecessary complexity,
 - focus on the student experience,
 - prioritise the AI oral practice page.
+
+## Conclusion
+
+This project allowed me to explore behind the scenes of every student portail that has been used for a long time. I could also polish my experience in PHP, SQL, HTML and CSS also obtain new skills such as integrating OpenAI API into our website, JavaScript and many more.
