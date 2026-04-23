@@ -120,7 +120,7 @@ button:hover {
     line-height: 1.4;
 }
 
-.login-link-row a {
+.login-link-row a, .login-links a {
     color: #2563eb;
     text-decoration: none;
     font-size: 14px;
