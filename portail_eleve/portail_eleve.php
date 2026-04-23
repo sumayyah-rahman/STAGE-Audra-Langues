@@ -6,6 +6,11 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../app/security/firewall.php';
 $config = audra_bootstrap_prof_page(); // TODO: adapter à un bootstrap élève dédié s’il en existe un
 
+require_once __DIR__ . '/../CVT/_db.php';
+
+$pdo = pdo();
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 if (($config['env'] ?? 'DEV') === 'DEV') {
     ini_set('display_errors', '1');
     error_reporting(E_ALL);
@@ -31,24 +36,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $login = trim((string)($_POST['login'] ?? ''));
     $password = trim((string)($_POST['password'] ?? ''));
 
-    // Accès test temporaire
-    if ($login === 'boss' && $password === 'boss') {
-        $_SESSION['student_logged']  = true;
-        $_SESSION['student_name']    = 'Sumayyah MAR';
-        $_SESSION['teacher_name']    = 'Munirah MAR';
-        $_SESSION['course_number']   = '12345';
-        $_SESSION['student_email']   = 'boss';
-        $_SESSION['langue_etudiee']  = 'English';
-        $_SESSION['niveau_actuel']   = 'B2';
-        $_SESSION['niveau_vise']     = 'C1';
-        $_SESSION['objectifs']       = 'langue professionnelle';
-        $_SESSION['type_formation']  = 'Présentiel';
+	$sql = "
+		SELECT TOP 1
+			id,
+			login,
+			password_hash,
+			student_name,
+			email,
+			numero_cours,
+			is_active
+		FROM dbo.AudraWeb_Eleve_Acces
+		WHERE login = ?
+		  AND is_active = 1
+	";
 
-        header('Location: dashboard_eleve.php');
-        exit;
-    } else {
-        $error = 'Identifiants incorrects.';
-    }
+	$st = $pdo->prepare($sql);
+	$st->execute([$login]);
+	$row = $st->fetch(PDO::FETCH_ASSOC);
+
+	if (!$row) {
+		$error = 'Identifiants incorrects.';
+	} else {
+		// V1 : comparaison simple en clair
+		// Plus tard : password_verify() avec vrai hash
+		if ((string)$row['password_hash'] !== $password) {
+			$error = 'Identifiants incorrects.';
+		} else {
+			$_SESSION['role'] = 'student';
+			$_SESSION['student_logged'] = true;
+			$_SESSION['course_number'] = (string)$row['numero_cours'];
+			$_SESSION['student_name'] = (string)($row['student_name'] ?? '');
+			$_SESSION['student_email'] = (string)($row['email'] ?? '');
+
+			header('Location: dashboard_eleve.php');
+			exit;
+		}
+	}
 }
 ?>
 
@@ -72,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<?php endif; ?>
 
 			<form method="post" action="">
-				<label for="login">Adresse email</label>
+				<label for="login">Identifiant</label>
 				<input type="text" id="login" name="login" required>
 
 				<label for="password">Mot de passe</label>
