@@ -39,59 +39,101 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $courseNumber = trim((string)($_POST['course_number'] ?? ''));
     $login = trim((string)($_POST['login'] ?? ''));
     $password = trim((string)($_POST['password'] ?? ''));
+    $passwordConfirmation = trim((string)($_POST['password_confirmation'] ?? ''));
 
     if (
         $studentName === '' ||
         $studentEmail === '' ||
         $courseNumber === '' ||
         $login === '' ||
-        $password === ''
+        $password === '' ||
+        $passwordConfirmation === ''
     ) {
         $error = 'Tous les champs sont obligatoires.';
+    } elseif (!filter_var($studentEmail, FILTER_VALIDATE_EMAIL)) {
+        $error = 'Adresse email invalide.';
+    } elseif (strlen($password) < 12) {
+        $error = 'Le mot de passe doit contenir au moins 12 caractères.';
+    } elseif (!preg_match('/[A-Z]/', $password)) {
+        $error = 'Le mot de passe doit contenir au moins une majuscule.';
+    } elseif (!preg_match('/[a-z]/', $password)) {
+        $error = 'Le mot de passe doit contenir au moins une minuscule.';
+    } elseif (!preg_match('/[0-9]/', $password)) {
+        $error = 'Le mot de passe doit contenir au moins un chiffre.';
+    } elseif (!preg_match('/[^A-Za-z0-9]/', $password)) {
+        $error = 'Le mot de passe doit contenir au moins un caractère spécial.';
+    } elseif ($password !== $passwordConfirmation) {
+        $error = 'Les mots de passe ne correspondent pas.';
     } else {
-        // Vérifie si le login existe déjà
-        $sqlCheck = "
+        // 1. Vérifier si le login existe déjà
+        $sqlCheckLogin = "
             SELECT TOP 1 id
             FROM dbo.AudraWeb_Eleve_Acces
             WHERE login = ?
         ";
+        $stCheckLogin = $pdo->prepare($sqlCheckLogin);
+        $stCheckLogin->execute([$login]);
+        $existingLogin = $stCheckLogin->fetch(PDO::FETCH_ASSOC);
 
-        $stCheck = $pdo->prepare($sqlCheck);
-        $stCheck->execute([$login]);
-        $existing = $stCheck->fetch(PDO::FETCH_ASSOC);
-
-        if ($existing) {
+        if ($existingLogin) {
             $error = 'Cet identifiant existe déjà. Merci d’en choisir un autre.';
         } else {
-            // V1 : mot de passe en clair pour test local
-            // Plus tard : password_hash($password, PASSWORD_DEFAULT)
-            $passwordHash = $password;
-
-            $sqlInsert = "
-                INSERT INTO dbo.AudraWeb_Eleve_Acces (
-                    login,
-                    password_hash,
-                    student_name,
-                    email,
-                    numero_cours,
-                    is_active
-                )
-                VALUES (?, ?, ?, ?, ?, 1)
+            // 2. Vérifier si l’email existe déjà
+            $sqlCheckEmail = "
+                SELECT TOP 1 id
+                FROM dbo.AudraWeb_Eleve_Acces
+                WHERE email = ?
             ";
+            $stCheckEmail = $pdo->prepare($sqlCheckEmail);
+            $stCheckEmail->execute([$studentEmail]);
+            $existingEmail = $stCheckEmail->fetch(PDO::FETCH_ASSOC);
 
-            $stInsert = $pdo->prepare($sqlInsert);
-            $ok = $stInsert->execute([
-                $login,
-                $passwordHash,
-                $studentName,
-                $studentEmail,
-                $courseNumber
-            ]);
-
-            if ($ok) {
-                $success = 'Compte créé avec succès. Vous pouvez maintenant vous connecter.';
+            if ($existingEmail) {
+                $error = 'Cette adresse email est déjà utilisée.';
             } else {
-                $error = 'Une erreur est survenue lors de la création du compte.';
+                // 3. Vérifier si le numéro de cours existe dans EBP
+                $sqlCheckCours = "
+                    SELECT TOP 1 Id
+                    FROM dbo.Item
+                    WHERE CAST(Id AS nvarchar(40)) = ?
+                ";
+                $stCheckCours = $pdo->prepare($sqlCheckCours);
+                $stCheckCours->execute([$courseNumber]);
+                $existingCours = $stCheckCours->fetch(PDO::FETCH_ASSOC);
+
+                if (!$existingCours) {
+                    $error = 'Le numéro de cours indiqué n’existe pas.';
+                } else {
+                    // 4. Créer le compte
+                    $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+                    $sqlInsert = "
+                        INSERT INTO dbo.AudraWeb_Eleve_Acces (
+                            login,
+                            password_hash,
+                            student_name,
+                            email,
+                            numero_cours,
+                            is_active
+                        )
+                        VALUES (?, ?, ?, ?, ?, 1)
+                    ";
+
+                    $stInsert = $pdo->prepare($sqlInsert);
+                    $ok = $stInsert->execute([
+                        $login,
+                        $passwordHash,
+                        $studentName,
+                        $studentEmail,
+                        $courseNumber
+                    ]);
+
+                    if ($ok) {
+                        $success = 'Compte créé avec succès. Vous pouvez maintenant vous connecter.';
+                    } else {
+                        $error = 'Une erreur est survenue lors de la création du compte.';
+                    }
+                }
             }
         }
     }
@@ -104,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		<meta charset="UTF-8">
 		<title>Portail Élève — Créer un Compte</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="./assets/css/portail_eleve.css?v=2">
+		<link rel="stylesheet" href="./assets/css/portail_eleve.css?v=3">
 	</head>
 	<body>
 		<div class="login-container">
@@ -142,6 +184,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					<input type="password" id="password" name="password" required>
 					<span class="toggle-eye" onclick="togglePassword()">👁</span>
 				</div>
+				<ul id="password-rules">
+				  <li id="rule-length">Au moins 12 caractères</li>
+				  <li id="rule-upper">Une majuscule</li>
+				  <li id="rule-lower">Une minuscule</li>
+				  <li id="rule-number">Un chiffre</li>
+				  <li id="rule-special">Un caractère spécial</li>
+				</ul>
+				
+				<label for="password_confirmation">Confirmation du mot de passe</label>
+				<div class="password-wrapper">
+					<input type="password" id="password_confirmation" name="password_confirmation" required>
+				</div>
+				<ul id="password-rules">				
+					<li id="rule-match">Les mots de passe correspondent</li>
+				</ul>
 
 				<button type="submit">Créer un compte</button>
 				
@@ -150,6 +207,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				</div>
 			</form>
 		</div>
-        <script src="./assets/js/portail_eleve.js"></script>
+		<script src="./assets/js/creer_compte_eleve.js"></script>
 	</body>
 </html>
