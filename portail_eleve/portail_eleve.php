@@ -57,9 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if (!$row) {
 		$error = 'Identifiants incorrects.';
 	} else {
-		// V1 : comparaison simple en clair
-		// Plus tard : password_verify() avec vrai hash
-		if ((string)$row['password_hash'] !== $password) {
+		if (!password_verify($password, (string)$row['password_hash'])) {
 			$error = 'Identifiants incorrects.';
 		} else {
 			$_SESSION['role'] = 'student';
