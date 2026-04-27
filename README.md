@@ -101,13 +101,13 @@ They should be stored securely on the server side.
 - AI training page structure,
 - AI topic selection,
 - conversation frontend logic,
-- backend bridge for AI requests.
+- backend bridge for AI requests,
+- database integration,
+- context management.
 
 ### Still in progress:
 - OpenAI conversation tuning,
-- database integration,
 - voice mode stabilisation,
-- context management,
 - responsive refinements.
 
 ## Notes
