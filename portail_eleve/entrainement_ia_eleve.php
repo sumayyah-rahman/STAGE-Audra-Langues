@@ -37,8 +37,12 @@ require_once __DIR__ . '/session_eleve.php';
             <div class="toc-box">
                 <p><strong>Langue étudiée :</strong> <?= htmlspecialchars($langueEtudiee) ?></p>
                 <p><strong>Contexte :</strong> <?= htmlspecialchars(is_array($contexte) ? implode(', ', $contexte) : (string)$contexte) ?></p>
-                <p><strong>Consigne :</strong> Répondez directement dans le chat. L’assistant vous guidera étape par étape.</p>
-            </div>
+                <p><strong>Consigne :</strong> 
+					<br> Tapez le thème / le point de grammaire à chaque fois vous démarrez votre session. Par exemple, 'Food' ou 'Future tense'. 
+					<br> Puis, répondez directement dans le chat. L’assistant vous guidera étape par étape :)
+					<br> Et si vous avez terminé, vous pouvez cliquer sur le bouton "Terminer la séance".
+				</p>
+			</div>
         </section>
 
         <section class="content-card" id="training-area">
@@ -58,6 +62,8 @@ require_once __DIR__ . '/session_eleve.php';
                 <button type="button" id="send-btn">➜</button>
                 <button type="button" id="mic-btn" class="mic">🎤</button>
             </div>
+			
+			<button type="button" id="end-session-btn">Terminer la séance</button>
         </section>
     </div>
 
