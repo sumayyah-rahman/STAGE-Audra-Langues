@@ -4,6 +4,63 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/session_eleve.php';
+
+$observation = 'Aucune observation pour le moment.';
+$pointARenforcer = 'Aucun point à renforcer pour le moment.';
+
+$idAcces = (int)($_SESSION['id_acces'] ?? 0);
+
+if ($idAcces > 0) {
+    require_once __DIR__ . '/../CVT/_db.php';
+
+    $pdo = pdo();
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $sqlSuivi = "
+        SELECT TOP 1
+            last_theme,
+            last_grammar,
+            last_session_date,
+            progression_note,
+            point_a_renforcer
+        FROM dbo.AudraWeb_Eleve_Suivi_IA
+        WHERE id_acces = ?
+    ";
+
+    $stSuivi = $pdo->prepare($sqlSuivi);
+    $stSuivi->execute([$idAcces]);
+    $rowSuivi = $stSuivi->fetch(PDO::FETCH_ASSOC);
+
+    if ($rowSuivi) {
+        $lastTheme = trim((string)($rowSuivi['last_theme'] ?? ''));
+        if ($lastTheme === '') {
+            $lastTheme = 'Aucun';
+        }
+
+        $lastGrammar = trim((string)($rowSuivi['last_grammar'] ?? ''));
+        if ($lastGrammar === '') {
+            $lastGrammar = 'Aucun';
+        }
+
+        $lastSessionDate = 'Aucune';
+        if (!empty($rowSuivi['last_session_date'])) {
+            $ts = strtotime((string)$rowSuivi['last_session_date']);
+            if ($ts) {
+                $lastSessionDate = date('d/m/Y', $ts);
+            }
+        }
+
+        $observation = trim((string)($rowSuivi['progression_note'] ?? ''));
+        if ($observation === '') {
+            $observation = 'Aucune observation pour le moment.';
+        }
+
+        $pointARenforcer = trim((string)($rowSuivi['point_a_renforcer'] ?? ''));
+        if ($pointARenforcer === '') {
+            $pointARenforcer = 'Aucun point à renforcer pour le moment.';
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -50,9 +107,17 @@ require_once __DIR__ . '/session_eleve.php';
 				<h2>Observation</h2>
 
 				<div class="toc-box">
-					<p>Le suivi détaillé de progression sera enrichi progressivement à partir des séances d’entraînement avec l’IA.</p>
+					<p><?= htmlspecialchars($observation) ?></p>
 				</div>
 			</section>
+			
+			<section class="content-card">
+				<h2>Point à renforcer</h2>
+
+				<div class="toc-box">
+					<p><?= htmlspecialchars($pointARenforcer) ?></p>
+				</div>
+			</section>			
         </div>
     </body>
 </html>
