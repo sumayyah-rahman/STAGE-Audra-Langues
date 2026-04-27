@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const selectedMode = document.getElementById('selected-mode');
   const selectedFocus = document.getElementById('selected-focus');
+  const endSessionBtn = document.getElementById('end-session-btn');
+  
+  const sessionHistory = [];
 
   let currentMode = '';
   let currentTheme = '';
@@ -29,12 +32,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function addMessage(text, sender) {
-    const msg = document.createElement('div');
-    msg.className = `msg ${sender}`;
-    msg.textContent = text;
-    chatLog.appendChild(msg);
-    chatLog.scrollTop = chatLog.scrollHeight;
-  }
+	const msg = document.createElement('div');
+	msg.className = `msg ${sender}`;
+	msg.textContent = text;
+	chatLog.appendChild(msg);
+	chatLog.scrollTop = chatLog.scrollHeight;
+
+	sessionHistory.push({
+		sender: sender,
+		text: text
+	});
+	}
 
   function addChoiceButtons() {
     const row = document.createElement('div');
@@ -241,4 +249,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // lancement initial
   addChoiceButtons();
+  
+if (endSessionBtn) {
+  endSessionBtn.addEventListener('click', async () => {
+    if (!trainingStarted) {
+      alert("Aucune séance à terminer.");
+      return;
+    }
+
+    try {
+      const response = await fetch('./assets/api/chat.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          action: 'end_session',
+          theme: currentTheme,
+          grammar: currentGrammar,
+          history: sessionHistory
+        })
+      });
+
+      const rawText = await response.text();
+      console.log('Raw end_session response:', rawText);
+
+      if (!rawText) {
+        alert("Aucune réponse du serveur.");
+        return;
+      }
+
+      let data;
+      try {
+        data = JSON.parse(rawText);
+      } catch (e) {
+        console.error('JSON parse error on end_session:', e);
+        alert("Réponse invalide du serveur.");
+        return;
+      }
+
+      if (data.error) {
+        console.error('Backend end_session error:', data.error);
+        alert("Erreur lors de la fin de séance.");
+        return;
+      }
+
+      alert("Séance terminée. L'observation a été enregistrée.");
+    } catch (error) {
+      console.error('Network error on end_session:', error);
+      alert("Problème réseau lors de la fin de séance.");
+    }
+  });
+}
 });
