@@ -18,7 +18,7 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $contexte = $_SESSION['contexte'] ?? [];
 
 // TO DO: clé API à sécuriser côté serveur par le service IT !!!
-$apiKey = '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'; 
+$apiKey = 'key'; 
 
 if ($apiKey === '') {
     echo json_encode([
