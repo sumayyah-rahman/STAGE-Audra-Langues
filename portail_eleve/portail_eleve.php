@@ -62,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		} else {
 			$_SESSION['role'] = 'student';
 			$_SESSION['student_logged'] = true;
+			$_SESSION['id_acces'] = (int)($row['id']);
 			$_SESSION['course_number'] = (string)$row['numero_cours'];
 			$_SESSION['student_name'] = (string)($row['student_name'] ?? '');
 			$_SESSION['student_email'] = (string)($row['email'] ?? '');
