@@ -131,3 +131,23 @@ button:hover {
     text-decoration: underline;
     color: #1d4ed8;
 }
+
+#password-rules {
+    margin: 10px 0 0;
+    padding-left: 18px;
+    text-align: left;
+}
+
+#password-rules li {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+#password-rules li.valid {
+    color: #065f46;
+}
+
+#password-rules li.invalid {
+    color: #b91c1c;
+}
