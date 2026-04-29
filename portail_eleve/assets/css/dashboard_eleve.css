@@ -91,9 +91,9 @@ h1 {
   color: white;
 }
 
-.logout-li {
-  margin-top: auto;
-}
+/* .logout-li { */
+  /* margin-top: auto; */
+/* } */
 
 #close-sidebar-button {
   display: none;
@@ -297,7 +297,7 @@ h1 {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
-.chat-controls button {
+.chat-controls button, .content-card .end-session-btn {
   width: auto;
   margin: 0;
   padding: 10px 14px;
@@ -310,8 +310,13 @@ h1 {
   cursor: pointer;
 }
 
-.chat-controls button:hover {
+.chat-controls button:hover, .content-card .end-session-btn:hover {
   background: #1d4ed8;
+}
+
+.content-card .end-session-btn {
+	display: block;
+	margin: 16px auto 0;
 }
 
 #mic-btn {

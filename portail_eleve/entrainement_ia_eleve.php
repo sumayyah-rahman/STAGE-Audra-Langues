@@ -11,7 +11,7 @@ require_once __DIR__ . '/session_eleve.php';
 	<meta charset="utf-8">
 	<title>Portail Élève — Entraînement IA</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="./assets/css/dashboard_eleve.css?v=2">
+	<link rel="stylesheet" href="./assets/css/dashboard_eleve.css?v=10">
 </head>
 <body>
     <button id="open-sidebar-button" type="button" onclick="openSidebar()" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbar">
@@ -73,7 +73,7 @@ require_once __DIR__ . '/session_eleve.php';
                 <button type="button" id="mic-btn" class="mic">🎤</button>
             </div>
 			
-			<button type="button" id="end-session-btn">Terminer la séance</button>
+			<button type="button" id="end-session-btn" class="end-session-btn">Terminer la séance</button>
         </section>
     </div>
 	<script src="./assets/js/navbar_eleve.js"></script>

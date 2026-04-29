@@ -3,24 +3,25 @@
 
 declare(strict_types=1);
 
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
 
-	
-	// Inactivité de plus de 30 minutes 
-	if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1800)) {
-		session_unset();
-		session_destroy():
-		
-		if (session_status() !== PHP_SESSION_ACTIVE) {
-			session_start();
-		}
-		
-		$_SESSION['session_expired'] = true;
-		
-		header('Location: portail_eleve.php');
-		exit;
-	}
-	$_SESSION['LAST_ACTIVITY'] = time();
+// Inactivité de plus de 30 minutes 
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1800)) {
+    session_unset();
+    session_destroy();
 
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+
+    $_SESSION['session_expired'] = true;
+
+    header('Location: portail_eleve.php');
+    exit;
+}
+$_SESSION['LAST_ACTIVITY'] = time();
 
 if (empty($_SESSION['student_logged'])) {
     header('Location: portail_eleve.php');

@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      alert('Browser does not support voice input. Use Chrome/Edge.');
+      alert("La saisie vocale n'est pas disponible sur ce navigateur. Merci d'utiliser le clavier :)");
       return;
     }
 

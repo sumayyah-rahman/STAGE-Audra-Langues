@@ -4,7 +4,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../../app/security/firewall.php';
-$config = audra_bootstrap_prof_page(); // TODO: adapter à un bootstrap élève dédié si besoin
+$config = audra_bootstrap_prof_page(); // TO DO: adapter à un bootstrap élève dédié si besoin
 require_once __DIR__ . '/../../base_url.php';
 require_once __DIR__ . '/../CVT/_db.php';
 

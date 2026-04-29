@@ -4,7 +4,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../../app/security/firewall.php';
-$config = audra_bootstrap_prof_page(); // TODO: adapter à un bootstrap élève dédié si besoin
+$config = audra_bootstrap_prof_page(); // TO DO: adapter à un bootstrap élève dédié si besoin
 require_once __DIR__ . '/../CVT/_db.php';
 
 if (($config['env'] ?? 'DEV') === 'DEV') {
@@ -83,18 +83,24 @@ if ($token === '') {
                 <input type="hidden" name="token" value="<?= h($token) ?>">
 
                 <label for="password">Nouveau mot de passe</label>
-                <input type="password" id="password" name="password" required>
+				<div class="password-wrapper">
+					<input type="password" id="password" name="password" required>
+					<span class="toggle-eye" onclick="togglePassword()">👁</span>
+				</div>
 
                 <label for="password_confirmation">Confirmation du mot de passe</label>
                 <input type="password" id="password_confirmation" name="password_confirmation" required>
 
                 <button type="submit">Enregistrer</button>
             </form>
+			
+
 
             <div class="login-links">
                 <a href="portail_eleve.php">Retour à la connexion</a>
             </div>
         <?php endif; ?>
     </div>
+	<script src="./assets/js/portail_eleve.js"></script>
 </body>
 </html>

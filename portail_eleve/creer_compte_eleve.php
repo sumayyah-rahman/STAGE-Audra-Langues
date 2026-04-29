@@ -4,7 +4,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../../app/security/firewall.php';
-$config = audra_bootstrap_prof_page(); // TODO: adapter à un bootstrap élève dédié s’il en existe un
+$config = audra_bootstrap_prof_page(); // TO DO: adapter à un bootstrap élève dédié si besoin
 
 require_once __DIR__ . '/../CVT/_db.php';
 
@@ -193,9 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				</ul>
 				
 				<label for="password_confirmation">Confirmation du mot de passe</label>
-				<div class="password-wrapper">
-					<input type="password" id="password_confirmation" name="password_confirmation" required>
-				</div>
+				<input type="password" id="password_confirmation" name="password_confirmation" required>
 				<ul id="password-rules">				
 					<li id="rule-match">Les mots de passe correspondent</li>
 				</ul>
