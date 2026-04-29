@@ -1,13 +1,8 @@
 function togglePassword() {
   const pwd = document.getElementById("password");
-  const confirmPwd = document.getElementById("password_confirmation");
 
   if (pwd) {
     pwd.type = (pwd.type === "password") ? "text" : "password";
-  }
-
-  if (confirmPwd) {
-    confirmPwd.type = (confirmPwd.type === "password") ? "text" : "password";
   }
 }
 
