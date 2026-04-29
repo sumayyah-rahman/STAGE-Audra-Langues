@@ -86,7 +86,7 @@ The main objective of the project is to create a functional student portal with 
 ## Security note
 
 API keys must never be exposed in front-end code or committed to a public repository.
-They should be stored securely on the server side.
+They should be stored securely on the server side. Recommandation; save it in the `.env`file :)
 
 ## Planning
 | Week   | Task                                             | Objective                                                                                                                       |
