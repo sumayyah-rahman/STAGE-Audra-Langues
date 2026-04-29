@@ -113,12 +113,12 @@ They should be stored securely on the server side. Recommandation; save it in th
 - conversation frontend logic,
 - backend bridge for AI requests,
 - database integration,
-- context management.
+- context management,
+- responsive refinements.
 
 ### Still in progress:
 - OpenAI conversation tuning,
 - voice mode stabilisation,
-- responsive refinements.
 
 ## Notes
 
