@@ -63,6 +63,11 @@ The main objective of the project is to create a functional student portal with 
 ## Project structure
 
 - `portail_commun.php` / login page
+- `creer_compte_eleve.php` / create account for the first time connection
+- `mdp_oublie_eleve.php`/ password reset
+- `send_password_reset_eleve.php`
+- `reset_password_eleve.php`
+- `process_reset_password_eleve.php`
 - `dashboard_eleve.php`
 - `entrainement_ia_eleve.php`
 - `progres_eleve.php`
@@ -70,7 +75,12 @@ The main objective of the project is to create a functional student portal with 
 - `deconnexion_commune.php`
 - `session_eleve.php`
 - `assets/css/`
+  - `portail_eleve.css`
+  - `dashboard_eleve.css`
 - `assets/js/`
+  - `portail_eleve.js`
+  - `creer_compte_eleve.js`
+  - `widget_ai_eleve.js`
 - `assets/api/chat.php`
 
 ## Security note
