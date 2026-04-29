@@ -91,14 +91,14 @@ They should be stored securely on the server side. Recommandation; save it in th
 ## Planning
 | Week   | Task                                             | Objective                                                                                                                       |
 | ------ | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| W1 | Validate chat functionality                      | Verify that the chatbot works correctly, that basic exchanges are possible, and that the conversation logic can be tested.      |
-| W2 | Create the student portal                        | Build the student area, the login page, the dashboard, the main navigation, and the AI training structure.                      |
-| W3 | Build the AI Training page                       | Create the main oral practice page where students can choose a topic and interact with the AI directly.                         |
-| W4 | Finalise student pages and context handling      | Complete and organise the student pages, improve visual coherence, and allow the user to define or enrich their own context.    |
-| W5 | Test and improve voice mode                      | Test voice usage, improve the oral behaviour of the chatbot, adjust delays, and verify conversation fluency.                    |
-| W6 | Integrate the database + responsive improvements | Progressively connect the portal to real data, especially student, teacher, and course information, and improve responsiveness. |
-| W7 | Fix issues and stabilise the application         | Correct remaining errors, improve reliability, and polish the final technical and visual details.                               |
-| Buffer | Unexpected issues                                | Keep extra time for technical issues, requested adjustments, or delays.                                                         |
+| W1 | Validate chat functionality | Verify that the chatbot works correctly, that basic exchanges are possible, and that the conversation logic can be tested. |
+| W2 | Create the student portal + Build the AI Training page | Build the student area, the login page, the dashboard, the main navigation, and the AI training structure + Create the main oral practice page where students can choose a topic and interact with the AI directly.|
+| W3 | Finalise student pages and context handling + Integrate the database | Complete and organise the student pages, improve visual coherence, and allow the user to define or enrich their own context + Progressively connect the portal to real data, especially student, teacher, and course information.|
+| W4 | Finalise progress page + responsive improvements |  Complete the page that shows the progress of the student based on the conversation that the student had with the AI which is also based on AI. |
+| W5 | Test and improve voice mode| Test voice usage, improve the oral behaviour of the chatbot, adjust delays, and verify conversation fluency.|
+| W6 |  |  |
+| W7 | Fix issues and stabilise the application | Correct remaining errors, improve reliability, and polish the final technical and visual details. |
+| Buffer | Unexpected issues | Keep extra time for technical issues, requested adjustments, or delays. |
 
 ## Current status
 
@@ -118,7 +118,12 @@ They should be stored securely on the server side. Recommandation; save it in th
 
 ### Still in progress:
 - OpenAI conversation tuning,
-- voice mode stabilisation,
+- voice mode stabilisation.
+
+### Issues:
+- The browser used HTTP:
+  - The sensitive API (in this case, the mic), doesn't trust the site to allow the user use the microphone
+  - We cannot force the site to be a trusted site for other security issues like man-in-the-middle
 
 ## Notes
 
