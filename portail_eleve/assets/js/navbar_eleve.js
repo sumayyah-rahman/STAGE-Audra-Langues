@@ -1,3 +1,5 @@
+// navbar_eleve.js - responsive pour le navbar
+
 const openButton = document.getElementById('open-sidebar-button');
 const navbar = document.getElementById('navbar');
 const overlay = document.getElementById('overlay');

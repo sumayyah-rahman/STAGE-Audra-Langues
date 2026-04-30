@@ -1,4 +1,6 @@
 <?php
+// assets/api/chat.php - la configuration de l'API
+
 declare(strict_types=1);
 
 header('Content-Type: application/json; charset=utf-8');
@@ -17,7 +19,7 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 // Contexte élève depuis la session
 $contexte = $_SESSION['contexte'] ?? [];
 
-// TO DO: clé API à sécuriser côté serveur par le service IT !!!
+// TO DO: clé API à sécuriser côté serveur par le service IT
 $apiKey = 'key'; 
 
 if ($apiKey === '') {

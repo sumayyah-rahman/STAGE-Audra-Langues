@@ -1,3 +1,5 @@
+// assets/js/widget_ai_eleve.js - les fonctionnes pour le chatbox
+
 document.addEventListener('DOMContentLoaded', () => {
   const chatLog = document.getElementById('chat-log');
   const userInput = document.getElementById('user-input');
