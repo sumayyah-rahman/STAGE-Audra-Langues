@@ -327,21 +327,110 @@ h1 {
 }
 
 .chat-choice-btn {
-  width: auto;
-  padding: 10px 14px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  background: #f8fafc;
-  color: #1f2937;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
+	width: auto;
+	padding: 10px 14px;
+	border: 1px solid #cbd5e1;
+	border-radius: 8px;
+	background: #f8fafc;
+	color: #1f2937;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
 }
 
 .chat-choice-btn:hover {
-  background: #2563eb;
-  color: #fff;
-  border-color: #2563eb;
+	background: #2563eb;
+	color: #fff;
+	border-color: #2563eb;
+}
+
+/* Consigne IA  */
+.panel .topbar .back-btn{
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:8px;
+    background:#6b7280;
+    color:#fff;
+    text-decoration:none;
+    font-weight:bold;
+    box-shadow:0 2px 6px rgba(0,0,0,.12);
+}
+
+.panel .topbar .title-main {
+    flex:1;
+    text-align:center;
+    font-size:24px;
+    font-weight:800;
+    color:#16a34a;
+    letter-spacing:.3px;
+}
+
+.panel h1{
+    margin-top:0;
+    font-size:22px;
+    color:#16a34a;
+}
+
+.panel .notice {
+	margin:12px 0 18px 0; 
+	padding:12px 14px; 
+	background:#eff6ff; 
+	border:2px solid #2563eb; 
+	border-radius:8px; 
+	color:#1e3a8a; 
+	line-height:1.5; 
+	font-size:15px; 
+	font-weight:bold;
+}
+
+.panel .etape {
+	margin:0 0 14px 0; 
+	font-size:16px; 
+	color:#16a34a; 
+	font-weight:bold;
+}
+
+/* Consigne IA */
+.consigne-form select,
+.consigne-form textarea {
+	width: 100%;
+	max-width: 520px;
+	padding: 10px 12px;
+	border: 1px solid #d1d5db;
+	border-radius: 8px;
+	font-size: 14px;
+	font-family: "Segoe UI", Tahoma, sans-serif;
+	background: #fff;
+	color: #1f2937;
+	margin-bottom: 14px;
+}
+
+.consigne-form select:focus,
+.consigne-form textarea:focus {
+	outline: none;
+	border-color: #2563eb;
+	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.consigne-form textarea {
+	resize: vertical;
+	min-height: 140px;
+}
+
+.submit-btn {
+	width: auto;
+	padding: 10px 18px;
+	border: none;
+	border-radius: 8px;
+	background: #2563eb;
+	color: #fff;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.submit-btn:hover {
+	background: #1d4ed8;
 }
 
 /* RESPONSIVE */
