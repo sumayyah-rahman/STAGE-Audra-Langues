@@ -19,7 +19,7 @@ Included:
 - progress page,
 - AI training page for oral conversation practice.
 
-The AI conversation area is integrated directly into the **AI Training** page instead of appearing as a widget (first idea).
+The AI conversation area is integrated directly into the **AI Training** page instead of appearing as a widget (initial idea).
 
 ## Main objective
 
@@ -119,6 +119,16 @@ They should be stored securely on the server side. Recommandation; save it in th
 ### Still in progress:
 - OpenAI conversation tuning,
 - voice mode stabilisation.
+
+### Recommandations from the advisor:
+- The AI needs to know:
+  - the language,
+  - the objectif,
+  - the context,
+  - the level of the student,
+  - the theme/grammar point/both,
+  in order to communicate with the student.
+- The teacher can put little notes for the AI so that the AI knows the progress during the class.
 
 ### Issues:
 - The browser used HTTP:
