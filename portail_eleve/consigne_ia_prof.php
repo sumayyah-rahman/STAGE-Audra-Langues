@@ -79,7 +79,6 @@ function h(?string $s): string {
 
         <div class="notice">
             Cette page permet d’envoyer une consigne à l’IA afin que les étudiants puissent pratiquer la langue à la maison.
-            À ce jour, la fonctionnalité a été développée uniquement pour l’anglais.
         </div>
 
         <div id="msg" style="margin:14px 0; font-weight:600;"></div>
@@ -114,6 +113,6 @@ function h(?string $s): string {
         </form>
     </div>
 	
-    <script src="./assets/js/consigne_ia_prof.js?v=1"></script>
+    <script src="./assets/js/consigne_ia_prof.js?v=7"></script>
 </body>
 </html>
