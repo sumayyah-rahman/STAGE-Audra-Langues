@@ -81,6 +81,7 @@ if ($grammar === '') {
 
 if ($action === 'end_session') {
     $historyText = '';
+    $langueEtudiee = $_SESSION['langue_etudiee'] ?? 'English';
 
     if (is_array($history)) {
         foreach ($history as $entry) {
@@ -94,9 +95,9 @@ if ($action === 'end_session') {
     }
 
     $analysisInstruction = <<<TEXT
-You are an English teacher.
+You are an {$langueEtudiee} teacher.
 
-Based on this student's English practice session, return:
+Based on this student's {$langueEtudiee} practice session, return:
 1. one short observation in French
 2. one short point to improve in French
 
@@ -231,14 +232,6 @@ TEXT;
 		exit;
 	}
 
-    if (!is_array($analysisJson)) {
-        echo json_encode([
-            'error' => 'Invalid analysis JSON.',
-            'raw' => $analysisText
-        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        exit;
-    }
-
     $observation = trim((string)($analysisJson['observation'] ?? ''));
     $pointARenforcer = trim((string)($analysisJson['point_a_renforcer'] ?? ''));
 
@@ -304,11 +297,91 @@ TEXT;
     exit;
 }
 
+// Ambil data dari session (sudah di-set oleh session_eleve.php)
+$langueEtudiee = $_SESSION['langue_etudiee'] ?? 'English';
+$niveauActuel = $_SESSION['niveau_actuel'] ?? 'A préciser';
+$objectif = $_SESSION['objectif'] ?? 'Improve professional communication';
+$contexte = $_SESSION['contexte'] ?? [];
+$contexteText = is_array($contexte) ? implode(', ', $contexte) : (string)$contexte;
+
+// Progression data
+$pointARenforcer = $_SESSION['point_a_renforcer'] ?? null;
+$lastTheme = $_SESSION['last_theme'] ?? null;
+$lastGrammar = $_SESSION['last_grammar'] ?? null;
+
+// Build level-appropriate instructions
+$levelInstruction = '';
+switch ($niveauActuel) {
+    case 'A1':
+        $levelInstruction = 'Student is a complete beginner. Use very short sentences, basic vocabulary, speak slowly. Correct major errors gently. Do not use complex grammar.';
+        break;
+    case 'A1+':
+        $levelInstruction = 'Student is beginner but has some basics. Use short sentences. Speak slightly slower than normal. Focus on common phrases and present tense.';
+        break;
+    case 'A2':
+        $levelInstruction = 'Student is elementary. Use simple sentences. Speak at normal speed but clearly. Introduce past tense gradually.';
+        break;
+    case 'A2+':
+        $levelInstruction = 'Student is lower intermediate. Use normal speech. Introduce future tense. Correct errors naturally.';
+        break;
+    case 'B1':
+        $levelInstruction = 'Student is intermediate. Speak normally. Use a mix of tenses. Encourage longer answers. Correct errors but don\'t interrupt flow.';
+        break;
+    case 'B1+':
+        $levelInstruction = 'Student is upper intermediate. Speak naturally. Introduce nuanced vocabulary and idiomatic expressions. Correct errors after they finish speaking.';
+        break;
+    case 'B2':
+    case 'C1':
+    case 'C2':
+        $levelInstruction = 'Student is advanced. Speak naturally at normal speed. Use complex structures. Correct only repeated or significant errors.';
+        break;
+    default:
+        $levelInstruction = 'Student level unknown. Adjust difficulty based on their responses. Start with intermediate level.';
+}
+
+// Build progression instruction
+$progressionInstruction = '';
+if ($pointARenforcer && trim($pointARenforcer) !== '') {
+    $progressionInstruction = "\n\nIMPORTANT - AREAS TO REINFORCE:\nThe student needs to work on: {$pointARenforcer}\n\nFocus your questions and corrections on this area.\n";
+}
+
+if ($lastTheme && $lastTheme !== 'Aucun') {
+    $progressionInstruction .= "\nLast session theme: {$lastTheme}\n";
+}
+
+if ($lastGrammar && $lastGrammar !== 'Aucun') {
+    $progressionInstruction .= "\nLast session grammar point: {$lastGrammar}\n";
+}
+
+// Build language instruction
+$languageInstruction = "You are a welcoming, calm, and encouraging {$langueEtudiee} teacher.";
+
+$consigneIA = $_SESSION['consigne_ia'] ?? null;
+
+$consigneInstruction = '';
+if ($consigneIA && trim($consigneIA) !== '') {
+    $consigneInstruction = "\n\nThe student has a specific instruction for you: {$consigneIA}\n\nIncorporate this instruction into your conversation and corrections.";
+}
+
 // Instructions système
 $systemInstruction = <<<TEXT
-You are a welcoming, calm, and encouraging English teacher.
+{$languageInstruction}
 
-Your role is to help students practise spoken English through natural conversation.
+{$levelInstruction}
+
+The student\'s learning objective is: {$objectif}.
+
+The student\'s professional context is: {$contexteText}.
+This should guide the conversation and the choice of vocabulary and topics.
+
+The student has chosen to practise the following theme: {$theme}.
+The student has chosen to focus on the following grammar point: {$grammar}.
+
+{$progressionInstruction}
+
+{$consigneInstruction}
+
+Your role is to help students practise spoken {$langueEtudiee} through natural conversation.
 
 The main objective is to develop confidence, fluency, and oral expression.
 
@@ -367,10 +440,6 @@ Encourage the student to use it naturally in their answers.
 Ask questions that make the student use this grammar point.
 Correct the student briefly if needed, but keep the exchange conversational, short, and natural.
 Do not turn the exchange into a long grammar lesson.
-
-The chosen conversation topic is: {$theme}.
-The student's professional context is: {$contextText}.
-The grammar focus for this conversation is: {$grammar}.
 
 Keep the conversation coherent with the chosen topic, the student’s professional context, and the grammar focus when relevant.
 

@@ -437,6 +437,37 @@ if (!$row) {
     $_SESSION['objectif']            = $objectif;
     $_SESSION['type_formation']      = $typeFormation;
     $_SESSION['contexte']            = $contexte;
+
+    $consigneIA = null;
+    $consigneProf = null;
+    $consineDate = null;
+
+    if (!empty($studentName) && $studentName !== 'À préciser') {
+        $sqlConsigne = "
+            SELECT TOP 1
+                consigne_ia,
+                prof,
+                date_creation
+            FROM dbo.AudraWeb_Eleve_Consigne
+            WHERE eleve = ?
+                AND is_active = 1
+            ORDER BY date_creation DESC
+            ";
+
+        $stConsigne = $pdo->prepare($sqlConsigne);
+        $stConsigne->execute([$studentName]);
+        $rowConsigne = $stConsigne->fetch(PDO::FETCH_ASSOC);
+
+        if ($rowConsigne) {
+            $consigneIA = trim((string)($rowConsigne['consigne_ia'] ?? ''));
+            $consigneProf = trim((string)($rowConsigne['prof'] ?? ''));
+            $consigneDate = $rowConsigne['date_creation'] ?? null;
+        }
+    }
+
+    $_SESSION['consigne_ia'] = $consigneIA;
+    $_SESSION['consigne_prof'] = $consigneProf;
+    $_SESSION['consigne_date'] = $consigneDate;
 }
 
 // Données portail / IA
@@ -447,7 +478,9 @@ if ($idAcces > 0) {
         SELECT TOP 1
             last_theme,
             last_grammar,
-            last_session_date
+            last_session_date,
+            progression_note,
+            point_a_renforcer
         FROM dbo.AudraWeb_Eleve_Suivi_IA
         WHERE id_acces = ?
     ";
@@ -474,20 +507,23 @@ if ($idAcces > 0) {
             }
         }
 
+        $progressionNote = trim((string)($rowSuivi['progression_note'] ?? ''));
+        $pointARenforcer = trim((string)($rowSuivi['point_a_renforcer'] ?? ''));
+
         $_SESSION['last_theme'] = $lastTheme;
         $_SESSION['last_grammar'] = $lastGrammar;
         $_SESSION['last_session_date'] = $lastSessionDate;
+        $_SESSION['progression_note'] = $rowSuivi['progression_note'] ?? null;
+        $_SESSION['point_a_renforcer'] = $rowSuivi['point_a_renforcer'] ?? null;
     } else {
         $lastTheme = $_SESSION['last_theme'] ?? 'Aucun';
         $lastGrammar = $_SESSION['last_grammar'] ?? 'Aucun';
         $lastSessionDate = $_SESSION['last_session_date'] ?? 'Aucune';
+        $progressionNote = $_SESSION['progression_note'] ?? null;
+        $pointARenforcer = $_SESSION['point_a_renforcer'] ?? null;
     }
 } else {
     $lastTheme = $_SESSION['last_theme'] ?? 'Aucun';
     $lastGrammar = $_SESSION['last_grammar'] ?? 'Aucun';
     $lastSessionDate = $_SESSION['last_session_date'] ?? 'Aucune';
-}
-
-if (!is_array($contexte)) {
-    $contexte = [$contexte];
 }

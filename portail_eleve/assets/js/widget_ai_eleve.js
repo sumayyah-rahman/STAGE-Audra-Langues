@@ -129,41 +129,55 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function handleFocusMessage(userText) {
-	if (currentMode === 'conversation') {
-	currentTheme = userText;
-	currentGrammar = '';
-	if (selectedFocus) selectedFocus.textContent = currentTheme;
-	trainingStarted = true;
+      // Validation first - before anything else
+      if (userText.length < 2) {
+          addMessage("Could you give a bit more detail? For example, 'food' or 'present perfect'", 'bot');
+          waitingForFocus = true;
+          return;
+      }
 
-	const botReply = await getAIResponse(userText, currentTheme, currentGrammar);
-	addMessage(botReply, 'bot');
-	speakText(botReply);
-	return;
-	}
+      if (currentMode === 'conversation') {
+          currentTheme = userText;
+          currentGrammar = '';
+          if (selectedFocus) selectedFocus.textContent = currentTheme;
+          trainingStarted = true;
 
-	if (currentMode === 'grammar') {
-	currentTheme = '';
-	currentGrammar = userText;
-	if (selectedFocus) selectedFocus.textContent = currentGrammar;
-	trainingStarted = true;
+          const botReply = await getAIResponse(userText, currentTheme, currentGrammar);
+          addMessage(botReply, 'bot');
+          speakText(botReply);
+          return;
+      }
 
-	const botReply = await getAIResponse(userText, currentTheme, currentGrammar);
-	addMessage(botReply, 'bot');
-	speakText(botReply);
-	return;
-	}
+      if (currentMode === 'grammar') {
+          currentTheme = '';
+          currentGrammar = userText;
+          if (selectedFocus) selectedFocus.textContent = currentGrammar;
+          trainingStarted = true;
 
-	if (currentMode === 'both') {
-	currentTheme = userText;
-	currentGrammar = userText;
-	if (selectedFocus) selectedFocus.textContent = userText;
-	trainingStarted = true;
+          const botReply = await getAIResponse(userText, currentTheme, currentGrammar);
+          addMessage(botReply, 'bot');
+          speakText(botReply);
+          return;
+      }
 
-	const botReply = await getAIResponse(userText, currentTheme, currentGrammar);
-	addMessage(botReply, 'bot');
-	speakText(botReply);
-	return;
-	}
+      if (currentMode === 'both') {
+          const parts = userText.split(/ and |, /i);
+          if (parts.length >= 2) {
+              currentTheme = parts[0].trim();
+              currentGrammar = parts[1].trim();
+              if (selectedFocus) selectedFocus.textContent = `${currentTheme} / ${currentGrammar}`;
+              trainingStarted = true;
+
+              const botReply = await getAIResponse(userText, currentTheme, currentGrammar);
+              addMessage(botReply, 'bot');
+              speakText(botReply);
+              return;
+          } else {
+              addMessage("Can you tell me the topic and grammar point separately? Example: 'food and present perfect'", 'bot');
+              waitingForFocus = true;
+              return;
+          }
+      }
   }
 
   async function sendCurrentMessage() {
@@ -262,9 +276,7 @@ if (endSessionBtn) {
     try {
       const response = await fetch('./assets/api/chat.php', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'end_session',
           theme: currentTheme,
@@ -297,6 +309,32 @@ if (endSessionBtn) {
       }
 
       alert("Séance terminée. L'observation a été enregistrée.");
+      
+      // Reset semua state
+      trainingStarted = false;
+      currentMode = '';
+      currentTheme = '';
+      currentGrammar = '';
+      waitingForFocus = true;
+      
+      // Clear session history array
+      sessionHistory.length = 0;
+      
+      // Reset UI display
+      if (selectedMode) selectedMode.textContent = 'Aucun';
+      if (selectedFocus) selectedFocus.textContent = 'Aucun';
+      
+      // Clear chat log except the first bot message
+      if (chatLog) {
+        chatLog.innerHTML = '<div class="msg bot">Hello! What would you like to do today?</div>';
+      }
+      
+      // Show choice buttons again
+      addChoiceButtons();
+      
+      // Clear input
+      if (userInput) userInput.value = '';
+      
     } catch (error) {
       console.error('Network error on end_session:', error);
       alert("Problème réseau lors de la fin de séance.");

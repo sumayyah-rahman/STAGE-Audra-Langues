@@ -43,7 +43,7 @@ if ($action === 'cours') {
 	$sql = "
 		SELECT DISTINCT TOP 200
 			LTRIM(RTRIM(CAST([N° cours] AS nvarchar(40)))) AS id_cours,
-			LRTRIM(RTRIM(CAST([Elève], ''))) AS eleve,
+			LTRIM(RTRIM(CAST([Elève] AS nvarchar(255)))) AS eleve
 		FROM [_PROG_Analyse_Planning_ClientEleves]
 		WHERE UPPER(LTRIM(RTRIM([Formateur]))) LIKE UPPER(?)
 		  AND [Date de planning] >= DATEADD(MONTH, -6, CAST(GETDATE() AS date))
@@ -116,7 +116,7 @@ if ($action === 'eleves') {
 	
 	$sql = "
 		SELECT DISTINCT TOP 200
-			LRTRIM(RTRIM(CAST([Elève], ''))) AS nom_eleve
+			LTRIM(RTRIM(CAST([Elève] AS nvarchar(255)))) AS nom_eleve
 		FROM [_PROG_Analyse_Planning_ClientEleves]
 		WHERE UPPER(LTRIM(RTRIM([Formateur]))) LIKE UPPER(?)
 		  AND LTRIM(RTRIM(CAST([N° cours] AS nvarchar(40)))) = ?
@@ -160,6 +160,7 @@ if ($action === 'eleves') {
 		'id_cours'   => $idCours,
 		'eleves' => $eleves
 	], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);	
+	exit;
 }
 
 echo json_encode ([
