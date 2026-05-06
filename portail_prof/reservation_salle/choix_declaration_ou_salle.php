@@ -66,6 +66,11 @@ $PROF = strtoupper(trim((string)($_SESSION['display'] ?? '')));
     background:#f0fdf4;
     border-color:#bbf7d0;
   }
+  .card-gray{
+    background:#f3f4f6;
+    border-color:#d1d5db;
+  }
+
   .card-title{
     font-size:20px;
     font-weight:800;
@@ -76,6 +81,9 @@ $PROF = strtoupper(trim((string)($_SESSION['display'] ?? '')));
   }
   .card-green .card-title{
     color:#16a34a;
+  }
+  .card-gray .card-title{
+    color:#374151;
   }
   .card-text{
     font-size:14px;
@@ -99,11 +107,18 @@ $PROF = strtoupper(trim((string)($_SESSION['display'] ?? '')));
     </a>
 
     <a class="card card-green" href="/modules/portail_prof/go_reservation_salle.php">
-  <div class="card-title">RESERVATION DE SALLE - SEMAINE PROCHAINE- </div>
-  <div class="card-text">
-    Entrez et réservez une salle pour les cours de la semaine prochaine.
-  </div>
-</a>
+      <div class="card-title">RESERVATION DE SALLE - SEMAINE PROCHAINE- </div>
+      <div class="card-text">
+        Entrez et réservez une salle pour les cours de la semaine prochaine.
+      </div>
+    </a>
+
+    <a class="card card-gray" href="/modules/portail_eleve/consigne_ia_prof.php">
+      <div class="card-title">ENVOI DE CONSIGNE À L'IA</div>
+      <div class="card-text">
+        Envoyez une consigne à l'IA pour que les étudiants puissent pratiquer la langue à la maison.
+      </div>
+    </a>
   </div>
 
   <div style="text-align:center; margin-top:24px;">
