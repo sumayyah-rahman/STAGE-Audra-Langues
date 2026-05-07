@@ -440,7 +440,7 @@ if (!$row) {
 
     $consigneIA = null;
     $consigneProf = null;
-    $consineDate = null;
+    $consigneDate = null;
 
     if (!empty($studentName) && $studentName !== 'À préciser') {
         $sqlConsigne = "
