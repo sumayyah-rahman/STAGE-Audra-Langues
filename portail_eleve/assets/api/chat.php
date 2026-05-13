@@ -20,7 +20,7 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $contexte = $_SESSION['contexte'] ?? [];
 
 // TO DO: clé API à sécuriser côté serveur par le service IT
-$apiKey = 'key'; 
+$apiKey = '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'; 
 
 if ($apiKey === '') {
     echo json_encode([
@@ -82,6 +82,9 @@ if ($grammar === '') {
 if ($action === 'end_session') {
     $historyText = '';
     $langueEtudiee = $_SESSION['langue_etudiee'] ?? 'English';
+	$historyJson = is_array($history)
+		? json_encode($history, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+		: null;
 
     if (is_array($history)) {
         foreach ($history as $entry) {
@@ -97,28 +100,36 @@ if ($action === 'end_session') {
     $analysisInstruction = <<<TEXT
 You are an {$langueEtudiee} teacher.
 
-Based on this student's {$langueEtudiee} practice session, return:
-1. one short observation in French
-2. one short point to improve in French
+Based on this student's {$langueEtudiee} practice session, produce a useful pedagogical report for the real teacher.
+
+Return:
+1. one clear observation in French
+2. the student's strengths in French
+3. the student's weaknesses in French
+4. one priority point to improve in French
+5. one short example based on an actual mistake or weakness observed during the session, with a corrected version in the target language
+
+Important language rules:
+- The pedagogical comments must be written in French.
+- The example must be linked to a real mistake, hesitation, weak point, or difficulty observed in the session.
+- If no clear mistake was made, provide one useful model sentence related to the chosen theme or grammar.
+- Any example sentence, correction example, model sentence, or mini-dialogue must be written in the target language: {$langueEtudiee}.
+- Do not write examples in French unless the target language is French.
 
 Rules:
-- be concise
 - be pedagogical
 - be kind
+- be concrete
+- be useful for the real teacher
 - mention the chosen theme or grammar if relevant
+- do not exaggerate the student's level
 - do not write anything else
 - output only valid JSON with exactly these keys:
 observation
+points_forts
+points_faibles
 point_a_renforcer
-TEXT;
-
-    $analysisInput = <<<TEXT
-Chosen theme: {$theme}
-Chosen grammar: {$grammar}
-Student professional context: {$contextText}
-
-Session history:
-{$historyText}
+exemple_a_retravailler
 TEXT;
 
 	$analysisPayload = [
@@ -135,11 +146,26 @@ TEXT;
 						'observation' => [
 							'type' => 'string'
 						],
+						'points_forts' => [
+							'type' => 'string'
+						],
+						'points_faibles' => [
+							'type' => 'string'
+						],
 						'point_a_renforcer' => [
+							'type' => 'string'
+						],
+						'exemple_a_retravailler' => [
 							'type' => 'string'
 						]
 					],
-					'required' => ['observation', 'point_a_renforcer'],
+					'required' => [
+						'observation',
+						'points_forts',
+						'points_faibles',
+						'point_a_renforcer',
+						'exemple_a_retravailler'
+						],
 					'additionalProperties' => false
 				],
 				'strict' => true
@@ -233,7 +259,36 @@ TEXT;
 	}
 
     $observation = trim((string)($analysisJson['observation'] ?? ''));
+	$pointsForts = trim((string)($analysisJson['points_forts'] ?? ''));
+	$pointsFaibles = trim((string)($analysisJson['points_faibles'] ?? ''));
     $pointARenforcer = trim((string)($analysisJson['point_a_renforcer'] ?? ''));
+	$exempleARetravailler = trim((string)($analysisJson['exemple_a_retravailler'] ?? ''));
+
+	if ($observation === ''){
+		$observation = 'Aucune observation générée.';
+	}
+	
+	if ($pointsForts === '') {
+		$pointsForts = 'Aucun point fort spécifique identifié.';
+	}
+	
+	if ($pointsFaibles === '') {
+		$pointsFaibles = 'Aucun point faible spécifique identifié.';
+	}
+	
+	if ($pointARenforcer === '') {
+		$pointARenforcer = 'Aucun point prioritaire identifié.';
+	}
+	
+	if ($exempleARetravailler === '') {
+		$exempleARetravailler = 'Aucun exemple spécifique généré.';
+	}
+	
+	$progressionNoteDetaillee = 
+		"Observation : " . $observation . "\n\n" .
+		"Points forts : " . $pointsForts . "\n\n" .
+		"Points faibles : " . $pointsFaibles . "\n\n" .
+		"Exemple à retravailler : " . $exempleARetravailler;
 
     $idAcces = (int)($_SESSION['id_acces'] ?? 0);
 
@@ -263,7 +318,7 @@ TEXT;
                 $theme !== 'No specific topic chosen yet' ? $theme : null,
                 $grammar !== 'No specific grammar focus chosen' ? $grammar : null,
                 $pointARenforcer !== '' ? $pointARenforcer : null,
-                $observation !== '' ? $observation : null,
+				$progressionNoteDetaillee !== '' ? $progressionNoteDetaillee : null,
                 $idAcces
             ]);
         } else {
@@ -284,20 +339,61 @@ TEXT;
                 $theme !== 'No specific topic chosen yet' ? $theme : null,
                 $grammar !== 'No specific grammar focus chosen' ? $grammar : null,
                 $pointARenforcer !== '' ? $pointARenforcer : null,
-                $observation !== '' ? $observation : null
+				$progressionNoteDetaillee !== '' ? $progressionNoteDetaillee : null,
             ]);
         }
+		
+		$numeroCoursSession = trim((string)($_SESSION['course_number'] ?? ''));
+		$studentNameSession = trim((string)($_SESSION['student_name'] ?? ''));
+		
+		$sqlInsertSession = "
+			INSERT INTO dbo.AudraWeb_Eleve_Sessions_IA (
+				id_acces,
+				numero_cours,
+				eleve,
+				theme,
+				grammar,
+				langue_etudiee,
+				observation,
+				points_forts,
+				points_faibles,
+				point_a_renforcer,
+				exemple_a_retravailler,
+				session_history,
+				date_session
+			)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE())
+		";
+		
+		$stInsertSession = $pdo->prepare($sqlInsertSession);
+		$stInsertSession->execute([
+			$idAcces,
+			$numeroCoursSession !== '' ? $numeroCoursSession : null,
+			$studentNameSession !== '' ? $studentNameSession : null,
+			$theme !== 'No specific topic chosen yet' ? $theme : null,
+			$grammar !== 'No specific grammar focus chosen' ? $grammar : null,
+			$langueEtudiee !== '' ? $langueEtudiee : null,
+			$observation,
+			$pointsForts,
+			$pointsFaibles,
+			$pointARenforcer,
+			$exempleARetravailler,
+			$historyJson
+		]);
     }
 
     echo json_encode([
         'success' => true,
         'observation' => $observation,
-        'point_a_renforcer' => $pointARenforcer
+		'points_forts' => $pointsForts,
+		'points_faibles' => $pointsFaibles,
+        'point_a_renforcer' => $pointARenforcer,
+		'exemple_a_retravailler' => $exempleARetravailler
     ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
 }
 
-// Ambil data dari session (sudah di-set oleh session_eleve.php)
+// Ambil data dari session.php
 $langueEtudiee = $_SESSION['langue_etudiee'] ?? 'English';
 $niveauActuel = $_SESSION['niveau_actuel'] ?? 'A préciser';
 $objectif = $_SESSION['objectif'] ?? 'Improve professional communication';
@@ -356,11 +452,49 @@ if ($lastGrammar && $lastGrammar !== 'Aucun') {
 // Build language instruction
 $languageInstruction = "You are a welcoming, calm, and encouraging {$langueEtudiee} teacher.";
 
-$consigneIA = $_SESSION['consigne_ia'] ?? null;
+// Consigne IA donnée par le professeur pour cet élève
+$consigneIA = null;
+$consigneProf = null;
+$consigneDate = null;
+
+$idAcces = (int)($_SESSION['id_acces'] ?? 0);
+
+if ($idAcces > 0) {
+    $sqlConsigne = "
+        SELECT TOP 1
+            consigne_ia,
+            prof,
+            date_creation
+        FROM dbo.AudraWeb_Eleve_Consigne
+        WHERE id_acces = ?
+          AND is_active = 1
+        ORDER BY date_creation DESC
+    ";
+
+    $stConsigne = $pdo->prepare($sqlConsigne);
+    $stConsigne->execute([$idAcces]);
+    $rowConsigne = $stConsigne->fetch(PDO::FETCH_ASSOC);
+
+    if ($rowConsigne) {
+        $consigneIA = trim((string)($rowConsigne['consigne_ia'] ?? ''));
+        $consigneProf = trim((string)($rowConsigne['prof'] ?? ''));
+        $consigneDate = $rowConsigne['date_creation'] ?? null;
+    }
+}
 
 $consigneInstruction = '';
-if ($consigneIA && trim($consigneIA) !== '') {
-    $consigneInstruction = "\n\nThe student has a specific instruction for you: {$consigneIA}\n\nIncorporate this instruction into your conversation and corrections.";
+
+if ($consigneIA !== null && trim($consigneIA) !== '') {
+    $consigneInstruction = <<<TEXT
+
+IMPORTANT - TEACHER'S PERSONAL INSTRUCTION:
+The real teacher has given this specific instruction for this student:
+{$consigneIA}
+
+You must follow this instruction during the conversation.
+Do not mention to the student that this instruction comes from a database.
+Use it naturally to guide your questions, corrections, examples and practice.
+TEXT;
 }
 
 // Instructions système
@@ -369,9 +503,9 @@ $systemInstruction = <<<TEXT
 
 {$levelInstruction}
 
-The student\'s learning objective is: {$objectif}.
+The student's learning objective is: {$objectif}.
 
-The student\'s professional context is: {$contexteText}.
+The student's professional context is: {$contexteText}.
 This should guide the conversation and the choice of vocabulary and topics.
 
 The student has chosen to practise the following theme: {$theme}.

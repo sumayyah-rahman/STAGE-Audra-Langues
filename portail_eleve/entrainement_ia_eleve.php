@@ -48,9 +48,9 @@ require_once __DIR__ . '/session_eleve.php';
 					<br><?= htmlspecialchars(is_array($contexte) ? implode(', ', $contexte) : (string)$contexte) ?>
 				</p>
                 <p><strong>Consigne :</strong> 
-					<br> Tapez le thème / le point de grammaire à chaque fois vous démarrez votre session. Par exemple, 'Food' ou 'Future tense'. 
+					<br> Tapez le thème / le point de grammaire à chaque fois vous démarrez votre session. Par exemple, 'Food','Future tense' ou 'Food and Future tense'. 
 					<br> Puis, répondez directement dans le chat. L’assistant vous guidera étape par étape :)
-					<br> Et si vous avez terminé, vous pouvez cliquer sur le bouton "Terminer la séance".
+					<br> Et si vous avez terminé, vous pouvez cliquer sur le bouton "Terminer la séance" pour mettre à jour le progrès qui peut prend quelques secondes.
 				</p>
 			</div>
         </section>

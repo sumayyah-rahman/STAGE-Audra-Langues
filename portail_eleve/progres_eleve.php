@@ -112,10 +112,10 @@ if ($idAcces > 0) {
 		</section>
 
 		<section class="content-card">
-			<h2>Observation</h2>
+			<h2>Bilan de séance IA</h2>
 
 			<div class="toc-box">
-				<p><?= htmlspecialchars($observation) ?></p>
+				<p style="white-space: pre-line;"><?= htmlspecialchars($observation, ENT_QUOTES, 'UTF-8') ?></p>
 			</div>
 		</section>
 		
