@@ -27,6 +27,8 @@ if (!$conn) {
     die('❌ Connexion SQL impossible');
 }
 
+// acah2 nak selit code kat sini
+
 audra_guard_prof_page($conn, [
     'allow_blocked'       => true,
     'allow_portal_closed' => true,
@@ -55,6 +57,52 @@ function h(?string $s): string {
 
     <!-- Pour l’instant on réutilise le CSS élève -->
     <link rel="stylesheet" href="./assets/css/dashboard_eleve.css?v=10">
+	<style>
+		.consigne-layout {
+			display: grid;
+			grid-template-columns: 1fr 2fr;
+			gap: 24px;
+			align-items: start;
+			margin-top: 18px;
+		}
+
+		.consigne-left,
+		.consigne-right {
+			background: #ffffff;
+		}
+
+		.consigne-form select,
+		.consigne-form textarea {
+			width: 100%;
+			max-width: 100%;
+		}
+
+		.consigne-right #bilan-ia-eleve {
+			padding: 14px;
+			border: 1px solid #d1d5db;
+			border-radius: 10px;
+			background: #f9fafb;
+			max-height: 560px;
+			overflow-y: auto;
+			width: 100%;
+		}
+
+		.consigne-right h2 {
+			margin-top: 0;
+			font-size: 18px;
+			color: #111827;
+		}
+
+		@media (max-width: 700px) {
+			.consigne-layout {
+				grid-template-columns: 1fr;
+			}
+
+			.consigne-right #bilan-ia-eleve {
+				max-height: 420px;
+			}
+		}
+	</style>
 </head>
 
 <body>
@@ -81,36 +129,50 @@ function h(?string $s): string {
             Cette page permet d’envoyer une consigne à l’IA afin que les étudiants puissent pratiquer la langue à la maison.
         </div>
 
-        <div id="msg" style="margin:14px 0; font-weight:600;"></div>
+		<div id="msg" style="margin:14px 0; font-weight:600;"></div>
 
-        <form id="consigne-form" class="consigne-form">
-            <label class="etape" for="cours">1) Sélectionner un cours</label><br>
-            <select id="cours" name="id_cours" required>
-                <option value="">-- Sélectionnez un cours --</option>
-            </select>
-            <br><br>
+		<div class="consigne-layout">
 
-            <label class="etape" for="eleve">2) Sélectionner un élève</label><br>
-            <select id="eleve" name="eleve" required>
-                <option value="">-- Sélectionnez un élève --</option>
-            </select>
-            <br><br>
+			<div class="consigne-left">
+				<form id="consigne-form" class="consigne-form">
+					<label class="etape" for="cours">1) Sélectionner un cours</label><br>
+					<select id="cours" name="id_cours" required>
+						<option value="">-- Sélectionnez un cours --</option>
+					</select>
+					<br><br>
 
-            <label class="etape" for="consigne">3) Saisir une consigne</label><br>
-            <textarea
-                id="consigne"
-                name="consigne"
-                rows="6"
-                cols="45"
-                required
-                placeholder="Ex. Travaille plus sur l'utilisation de 'could' et 'would'."
-            ></textarea>
-            <br>
+					<label class="etape" for="eleve">2) Sélectionner un élève</label><br>
+					<select id="eleve" name="eleve" required>
+						<option value="">-- Sélectionnez un élève --</option>
+					</select>
+					<br><br>
 
-            <button type="submit" class="submit-btn">
-                Envoyer la consigne
-            </button>
-        </form>
+					<label class="etape" for="consigne">3) Saisir une consigne</label><br>
+					<textarea
+						id="consigne"
+						name="consigne"
+						rows="6"
+						required
+						placeholder="Ex. Travaille plus sur l'utilisation de 'could' et 'would'."
+					></textarea>
+					<br>
+
+					<button type="submit" class="submit-btn">
+						Envoyer la consigne
+					</button>
+				</form>
+			</div>
+
+			<div class="consigne-right">
+				<div id="bilan-ia-eleve" style="display:none;">
+					<h2>Dernières séances IA de l’élève</h2>
+					<div id="bilan-ia-contenu">
+						Sélectionnez un élève pour afficher son bilan IA.
+					</div>
+				</div>
+			</div>
+
+		</div>
     </div>
 	
     <script src="./assets/js/consigne_ia_prof.js?v=7"></script>
