@@ -11,7 +11,7 @@ require_once __DIR__ . '/session_eleve.php';
 	<meta charset="utf-8">
 	<title>Portail Élève — Entraînement IA</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="./assets/css/dashboard_eleve.css?v=10">
+	<link rel="stylesheet" href="./assets/css/dashboard_eleve.css?v=23">
 </head>
 <body>
     <button id="open-sidebar-button" type="button" onclick="openSidebar()" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbar">
@@ -47,11 +47,15 @@ require_once __DIR__ . '/session_eleve.php';
                 <p><strong>Contexte :</strong> 
 					<br><?= htmlspecialchars(is_array($contexte) ? implode(', ', $contexte) : (string)$contexte) ?>
 				</p>
-                <p><strong>Consigne :</strong> 
-					<br> Tapez le thème / le point de grammaire à chaque fois vous démarrez votre session. Par exemple, 'Food','Future tense' ou 'Food and Future tense'. 
-					<br> Puis, répondez directement dans le chat. L’assistant vous guidera étape par étape :)
-					<br> Et si vous avez terminé, vous pouvez cliquer sur le bouton "Terminer la séance" pour mettre à jour le progrès qui peut prend quelques secondes.
-				</p>
+				<p><strong>Consigne :</strong></p>
+				<ul>
+					<li>Choisissez d’abord le mode d’entraînement : conversation, grammaire ou les deux.</li>
+					<li>Tapez ensuite le thème ou le point de grammaire que vous souhaitez travailler. Par exemple : “Food”, “Future tense” ou “Food and Future tense”.</li>
+					<li>Répondez directement dans le chat. L’assistant vous guidera avec des phrases simples et une seule question à la fois.</li>
+					<li>Le bouton 🎤 sert à parler en anglais. Pour poser une question en français, écrivez directement dans le chat.</li>
+					<li>Quand vous avez terminé, cliquez sur “Terminer la séance” pour mettre à jour vos progrès. Cette étape peut prendre quelques secondes.</li>
+				</ul>
+				<p>À vous de jouer !</p>
 			</div>
         </section>
 
@@ -77,6 +81,6 @@ require_once __DIR__ . '/session_eleve.php';
         </section>
     </div>
 	<script src="./assets/js/navbar_eleve.js"></script>
-    <script src="./assets/js/widget_ai_eleve.js"></script>
+    <script src="./assets/js/widget_ai_eleve.js?v=22"></script>
 </body>
 </html>

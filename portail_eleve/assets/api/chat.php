@@ -20,7 +20,8 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $contexte = $_SESSION['contexte'] ?? [];
 
 // TO DO: clé API à sécuriser côté serveur par le service IT
-$apiKey = 'key'; 
+$openaiConfig = require 'C:\\data\\audra\\config_openai.php';
+$apiKey = trim($openaiConfig['api_key'] ?? ''); 
 
 if ($apiKey === '') {
     echo json_encode([
@@ -107,7 +108,7 @@ Return:
 2. the student's strengths in French
 3. the student's weaknesses in French
 4. one priority point to improve in French
-5. one short example based on an actual mistake or weakness observed during the session, with a corrected version in the target language
+5. one short example based on an actual mistake or weakness observed during the session, without the corrected version in the target language. If the student did not make a clear mistake, write exactly: "Aucune erreur nette observée pendant cette séance."
 
 Important language rules:
 - The pedagogical comments must be written in French.
@@ -130,6 +131,15 @@ points_forts
 points_faibles
 point_a_renforcer
 exemple_a_retravailler
+TEXT;
+
+$analysisInput = <<<TEXT
+Chosen theme: {$theme}
+Chosen grammar: {$grammar}
+Student professional context: {$contextText}
+
+Session history:
+{$historyText}
 TEXT;
 
 	$analysisPayload = [
@@ -288,7 +298,7 @@ TEXT;
 		"Observation : " . $observation . "\n\n" .
 		"Points forts : " . $pointsForts . "\n\n" .
 		"Points faibles : " . $pointsFaibles . "\n\n" .
-		"Exemple à retravailler : " . $exempleARetravailler;
+		"Exemple d'une erreur commise : " . $exempleARetravailler;
 
     $idAcces = (int)($_SESSION['id_acces'] ?? 0);
 
@@ -549,6 +559,8 @@ Do not propose changing the topic unless the student asks.
 
 Avoid repeating the same response too often.
 
+If the student did the punctuation error, it's not a serious error. You do not need to correct it.
+
 If the student gives a very short answer, ask them to add one detail, for example:
 - why?
 - when?
@@ -562,9 +574,12 @@ STRICT FORMAT RULES:
 - Never give numbered lists.
 - Never give long explanations unless the student explicitly asks for one.
 - Never give detailed plans in several steps unless the student explicitly asks for them.
-- Answer in 2 to 4 sentences maximum.
+- Answer in 1 to 3 sentences maximum.
 - Ask only one question at the end.
+- Never ask more than one follow-up questions
 - Keep every reply short, natural, and adapted to oral conversation.
+- Use simple words
+- Avoid difficult vocabulary unless the student ask you to
 
 If the student mentions a food, a place, a hobby, or any other topic, stay in conversation mode.
 Do not provide recipes, long factual explanations, or detailed informational content unless the student explicitly asks for them.

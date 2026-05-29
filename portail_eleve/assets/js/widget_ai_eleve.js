@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentGrammar = '';
   let waitingForFocus = false;
   let trainingStarted = false;
+  let recognition = null;
+  let isListening = false;
+  let finalTranscript = '';
 
   if (!chatLog) {
     console.error('❌ chat-log introuvable');
@@ -283,36 +286,131 @@ document.addEventListener('DOMContentLoaded', () => {
     speakText(botReply);
   }
 
-  function startVoice() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    if (!SpeechRecognition) {
-      alert("La saisie vocale n'est pas disponible sur ce navigateur. Merci d'utiliser le clavier :)");
+
+function startVoice() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    alert("La saisie vocale n'est pas disponible sur ce navigateur. Merci d'utiliser Chrome ou Edge, ou le clavier :)");
+    return;
+  }
+
+  if (isListening) {
+    isListening = false;
+
+    if (recognition) {
+      recognition.stop();
+    }
+
+    if (micBtn) {
+      micBtn.disabled = false;
+      micBtn.textContent = '🎤';
+      micBtn.title = 'Démarrer le micro';
+    }
+
+	if (userInput) {
+	  userInput.value = finalTranscript.trim();
+	}
+
+	if (finalTranscript.trim() !== '') {
+	  setTimeout(async () => {
+		await sendCurrentMessage();
+	  }, 300);
+	}
+
+	return;
+  }
+
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
+
+  finalTranscript = userInput ? userInput.value.trim() : '';
+  isListening = true;
+
+  if (micBtn) {
+    micBtn.disabled = false;
+    micBtn.textContent = '⏹️';
+    micBtn.title = 'Arrêter le micro';
+  }
+
+  recognition = new SpeechRecognition();
+  recognition.lang = 'en-US';
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
+  recognition.continuous = true;
+
+  recognition.onresult = (event) => {
+    let interimTranscript = '';
+
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const transcript = event.results[i][0].transcript;
+
+      if (event.results[i].isFinal) {
+        finalTranscript += ' ' + transcript;
+      } else {
+        interimTranscript += transcript;
+      }
+    }
+
+    if (userInput) {
+      userInput.value = (finalTranscript + ' ' + interimTranscript).trim();
+    }
+  };
+
+  recognition.onerror = (event) => {
+    console.error('Voice error:', event.error);
+
+    if (event.error === 'not-allowed') {
+      isListening = false;
+      alert("Le micro est bloqué. Merci d'autoriser le micro dans le navigateur.");
+    }
+
+    if (event.error === 'no-speech') {
+      console.log("Aucune voix détectée, on continue...");
+    }
+  };
+
+  recognition.onend = () => {
+    if (isListening) {
+      try {
+        recognition.start();
+      } catch (e) {
+        console.warn('Impossible de relancer le micro immédiatement:', e);
+      }
       return;
     }
 
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
+    if (micBtn) {
+      micBtn.disabled = false;
+      micBtn.textContent = '🎤';
+      micBtn.title = 'Démarrer le micro';
+    }
 
-    recognition.onresult = async (event) => {
-      const voiceText = event.results[0][0].transcript;
-      if (!userInput) return;
+	if (userInput) {
+	  userInput.value = finalTranscript.trim();
+	}
 
-      userInput.value = voiceText;
+	if (finalTranscript.trim() !== '') {
+	  setTimeout(async () => {
+		await sendCurrentMessage();
+	  }, 300);
+	}
+  };
 
-      setTimeout(async () => {
-        await sendCurrentMessage();
-      }, 800);
-    };
-
-    recognition.onerror = (event) => {
-      console.error('Voice error:', event.error);
-    };
-
+  try {
     recognition.start();
+  } catch (e) {
+    console.error('Erreur démarrage micro:', e);
+    isListening = false;
+
+    if (micBtn) {
+      micBtn.textContent = '🎤';
+      micBtn.title = 'Démarrer le micro';
+    }
   }
+}
 
   if (sendBtn) {
     sendBtn.addEventListener('click', sendCurrentMessage);
