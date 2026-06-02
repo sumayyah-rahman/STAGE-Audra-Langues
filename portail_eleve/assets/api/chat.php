@@ -580,6 +580,7 @@ STRICT FORMAT RULES:
 - Keep every reply short, natural, and adapted to oral conversation.
 - Use simple words
 - Avoid difficult vocabulary unless the student ask you to
+- Do not repeat the same response!
 
 If the student mentions a food, a place, a hobby, or any other topic, stay in conversation mode.
 Do not provide recipes, long factual explanations, or detailed informational content unless the student explicitly asks for them.
