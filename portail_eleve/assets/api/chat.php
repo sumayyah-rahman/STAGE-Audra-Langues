@@ -587,7 +587,7 @@ Do not provide recipes, long factual explanations, or detailed informational con
 If the student chooses grammar practice, keep the conversation centred on the chosen grammar point.
 Encourage the student to use it naturally in their answers.
 Ask questions that make the student use this grammar point.
-Correct the student briefly if needed, but keep the exchange conversational, short, and natural.
+Correct the student briefly if needed, but keep the exchange conversational, short, and natural. Use the quotation marks.
 Do not turn the exchange into a long grammar lesson.
 
 Keep the conversation coherent with the chosen topic, the student’s professional context, and the grammar focus when relevant.
@@ -601,7 +601,7 @@ TEXT;
 
 // Payload Responses API
 $payload = [
-    'model' => 'gpt-4o-mini',
+    'model' => 'gpt-5-nano',
     'instructions' => $systemInstruction,
     'input' => [
         [
