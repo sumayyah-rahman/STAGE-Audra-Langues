@@ -10,14 +10,18 @@ The goal is to provide students with a simple and coherent learning environment 
 
 ## Project scope
 
-The current scope of the project focuses on the **student side only**.
+The current scope of the project focuses on both student's and teacher's side.
 
 Included:
 - student login page,
+- student create account page,
+- forget password page,
 - student dashboard,
 - personal information page,
 - progress page,
-- AI training page for oral conversation practice.
+- AI training page for oral conversation practice,
+- teacher's page to send instructions to the AI,
+- teacher's page to read summary done by AI for every session. 
 
 The AI conversation area is integrated directly into the **AI Training** page instead of appearing as a widget (initial idea).
 
@@ -40,13 +44,23 @@ The main objective of the project is to create a functional student portal with 
 - AI training page,
 - common logout system.
 
+### Authentification system
+- forgot password page,
+- renew password link sent through email (SMTP),
+- create account.
+
 ### AI conversation area
 - topic selection before the conversation,
 - text input,
 - browser-based speech recognition,
 - browser-based text-to-speech,
 - backend connection through `chat.php`,
-- conversation flow prepared for OpenAI Responses API.
+- conversation flow prepared for OpenAI Responses API,
+- AI wil generate a short summary for every finished session.
+
+### Teacher's instructions
+- Teacher's page will receive summary from AI
+- Teacher can send instructions to AI 
 
 ## Technologies used
 
@@ -131,9 +145,15 @@ They should be stored securely on the server side. Recommandation; save it in th
 - The teacher can put little notes for the AI so that the AI knows the progress during the class.
 
 ### Issues:
-- The browser used HTTP:
+- The browser used HTTP: (resolved)
   - The sensitive API (in this case, the mic), doesn't trust the site to allow the user use the microphone
   - We cannot force the site to be a trusted site for other security issues like man-in-the-middle
+- The TTS is too robotic:
+  - This issue is not a big issue
+  - Therefore, it will be abandoned
+- The STT recognition
+  - The STT might not recognise certain word coming from the student
+  - The STT can only use one language which is English
 
 ## Notes
 
