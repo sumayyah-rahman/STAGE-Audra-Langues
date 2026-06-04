@@ -20,8 +20,8 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $contexte = $_SESSION['contexte'] ?? [];
 
 // TO DO: clé API à sécuriser côté serveur par le service IT
-$openaiConfig = require 'C:\\data\\audra\\config_openai.php';
-$apiKey = trim($openaiConfig['api_key'] ?? ''); 
+$openaiConfig = require 'C:\data\audra\config_openai.php';
+$apiKey = trim($openaiConfig['openai_api_key'] ?? ''); 
 
 if ($apiKey === '') {
     echo json_encode([
@@ -54,14 +54,16 @@ if ($action !== 'end_session' && $message === '') {
     exit;
 }
 
-// Reset conversation si le thème change
-$prevTheme = (string)($_SESSION['ai-theme'] ?? '');
-if ($theme !== '' && $prevTheme !== '' && $theme !== $prevTheme) {
+// Reset conversation si le thème ou le point de grammaire change
+$currentFocusKey = trim($theme . '|' . $grammar);
+$prevFocusKey = (string)($_SESSION['ai-focus-key'] ?? '');
+
+if ($currentFocusKey !== '|' && $prevFocusKey !== '' && $currentFocusKey !== $prevFocusKey) {
     unset($_SESSION['openai_previous_response_id']);
 }
 
-if ($theme !== '') {
-    $_SESSION['ai-theme'] = $theme;
+if ($currentFocusKey !== '|') {
+    $_SESSION['ai-focus-key'] = $currentFocusKey;
 }
 
 $prevResponseId = (string)($_SESSION['openai_previous_response_id'] ?? '');
@@ -460,7 +462,7 @@ if ($lastGrammar && $lastGrammar !== 'Aucun') {
 }
 
 // Build language instruction
-$languageInstruction = "You are a welcoming, calm, and encouraging {$langueEtudiee} teacher.";
+$languageInstruction = "You are a welcoming, friendly, and encouraging {$langueEtudiee} teacher.";
 
 // Consigne IA donnée par le professeur pour cet élève
 $consigneIA = null;
@@ -509,7 +511,7 @@ TEXT;
 
 // Instructions système
 $systemInstruction = <<<TEXT
-{$languageInstruction}
+{$languageInstruction} 
 
 {$levelInstruction}
 
@@ -521,9 +523,13 @@ This should guide the conversation and the choice of vocabulary and topics.
 The student has chosen to practise the following theme: {$theme}.
 The student has chosen to focus on the following grammar point: {$grammar}.
 
+The current chosen theme and grammar focus are the priority.
+If the current theme or grammar focus is different from earlier messages, ignore the earlier topic and continue only with the current focus.
+Do not bring back previous topics unless the student explicitly asks for them.
+
 {$progressionInstruction}
 
-{$consigneInstruction}
+If the student says 'Consigne', focus on: {$consigneInstruction}
 
 Your role is to help students practise spoken {$langueEtudiee} through natural conversation.
 
@@ -531,7 +537,7 @@ The main objective is to develop confidence, fluency, and oral expression.
 
 In speaking mode, your priority is to maintain the conversation.
 
-You pay attention to the student’s grammatical errors and correct them in a brief, clear, and kind manner only when necessary. If useful, you may invite the student to repeat the corrected sentence.
+You pay attention to the student’s grammatical errors and correct them in a brief, clear, and kind manner only when necessary.
 
 Encourage the student to use full sentences and to develop their ideas.
 
@@ -544,7 +550,8 @@ If the student chooses conversation practice:
 - focus mainly on speaking naturally about the chosen topic.
 
 If the student chooses grammar practice:
-- focus mainly on helping the student practise the chosen grammar point through short spoken interaction.
+- give a brief explanation on that topic
+- give few exercices
 
 If the student chooses both:
 - keep the conversation on the chosen topic while lightly guiding the student toward the chosen grammar point.
@@ -574,13 +581,15 @@ STRICT FORMAT RULES:
 - Never give numbered lists.
 - Never give long explanations unless the student explicitly asks for one.
 - Never give detailed plans in several steps unless the student explicitly asks for them.
-- Answer in 1 to 3 sentences maximum.
+- Answer in 1 to 2 sentences maximum.
 - Ask only one question at the end.
 - Never ask more than one follow-up questions
 - Keep every reply short, natural, and adapted to oral conversation.
 - Use simple words
 - Avoid difficult vocabulary unless the student ask you to
-- Do not repeat the same response!
+- Never repeat the same response
+- You do not need to correct punctuation marks error
+- Do not reformulate the student's response, just move on with the follow-up question.
 
 If the student mentions a food, a place, a hobby, or any other topic, stay in conversation mode.
 Do not provide recipes, long factual explanations, or detailed informational content unless the student explicitly asks for them.
@@ -588,8 +597,7 @@ Do not provide recipes, long factual explanations, or detailed informational con
 If the student chooses grammar practice, keep the conversation centred on the chosen grammar point.
 Encourage the student to use it naturally in their answers.
 Ask questions that make the student use this grammar point.
-Correct the student briefly if needed, but keep the exchange conversational, short, and natural. Use the quotation marks.
-Do not turn the exchange into a long grammar lesson.
+Keep the exchange conversational, short, and natural.
 
 Keep the conversation coherent with the chosen topic, the student’s professional context, and the grammar focus when relevant.
 

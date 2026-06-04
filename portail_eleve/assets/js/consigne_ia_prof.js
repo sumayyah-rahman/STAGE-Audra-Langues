@@ -1,15 +1,107 @@
 // consigne_ia_prof.js
 // Gestion de la page consigne_ia_prof.php
 // - charge les cours du prof connecté
+// - filtre les cours par numéro ou nom d'élève
 // - charge les élèves du cours sélectionné
+// - charge le bilan IA de l'élève sélectionné
 // - enregistre une consigne IA personnalisée pour un élève précis
+
+let coursOptionsData = [];
+
 function escapeHtml(str) {
 	return String(str || '')
-		.replace('&', '&amp;')
-		.replace('<', '&lt;')
-		.replace('>', '&gt;')
-		.replace('"', '&quot;')
-		.replace("'", '&apos;')
+		.replaceAll('&', '&amp;')
+		.replaceAll('<', '&lt;')
+		.replaceAll('>', '&gt;')
+		.replaceAll('"', '&quot;')
+		.replaceAll("'", '&#039;');
+}
+
+function resetEleveEtBilan() {
+	const eleveSelect = document.getElementById('eleve');
+	const bloc = document.getElementById('bilan-ia-eleve');
+	const contenu = document.getElementById('bilan-ia-contenu');
+
+	if (eleveSelect) {
+		eleveSelect.innerHTML = '<option value="">-- Sélectionnez un élève --</option>';
+	}
+
+	if (bloc) {
+		bloc.style.display = 'none';
+	}
+
+	if (contenu) {
+		contenu.innerHTML = 'Sélectionnez un élève pour afficher son bilan IA.';
+	}
+}
+
+function renderCoursOptions(filtre = '') {
+	const list = document.getElementById('cours-list');
+
+	if (!list) return;
+
+	const recherche = String(filtre || '').trim().toLowerCase();
+
+	list.innerHTML = '';
+
+	if (recherche === '') {
+		list.style.display = 'none';
+		return;
+	}
+
+	const coursFiltres = coursOptionsData.filter(c => {
+		const texteRecherche = (
+			String(c.id_cours || '') + ' ' +
+			String(c.eleve || '')
+		).toLowerCase();
+
+		return texteRecherche.includes(recherche);
+	});
+
+	if (coursFiltres.length === 0) {
+		list.style.display = 'block';
+		list.innerHTML = '<li><button type="button" disabled>Aucun cours trouvé</button></li>';
+		return;
+	}
+
+	list.style.display = 'block';
+
+	coursFiltres.forEach(c => {
+		const li = document.createElement('li');
+		const btn = document.createElement('button');
+
+		btn.type = 'button';
+		
+		btn.textContent = c.id_cours;
+
+		btn.addEventListener('click', () => {
+			selectionnerCours(c.id_cours, c.eleve || '');
+		});
+
+		li.appendChild(btn);
+		list.appendChild(li);
+	});
+}
+
+function selectionnerCours(idCours, elevesTexte = '') {
+	const hiddenCours = document.getElementById('cours');
+	const searchInput = document.getElementById('cours-search');
+	const list = document.getElementById('cours-list');
+
+	if (hiddenCours) {
+		hiddenCours.value = idCours;
+	}
+
+	if (searchInput) {
+		searchInput.value = idCours;
+	}
+
+	if (list) {
+		list.style.display = 'none';
+	}
+
+	resetEleveEtBilan();
+	chargerEleves(idCours);
 }
 
 async function chargerCours() {
@@ -18,7 +110,7 @@ async function chargerCours() {
 
 	if (!sel) return;
 
-	sel.innerHTML = '<option value="">-- Sélectionnez un cours --</option>';
+	sel.innerHTML = '<option value="">-- Chargement des cours... --</option>';
 
 	try {
 		const res = await fetch('./select_cours_eleve_ia.php?action=cours', {
@@ -33,23 +125,13 @@ async function chargerCours() {
 				msg.style.color = '#b91c1c';
 				msg.textContent = "⚠️ Impossible de charger la liste des cours.";
 			}
+
+			sel.innerHTML = '<option value="">-- Aucun cours chargé --</option>';
 			return;
 		}
 
-		js.cours.forEach(c => {
-			const opt = document.createElement('option');
-
-			opt.value = c.id_cours;
-
-			// On affiche uniquement le numéro de cours.
-			// Les élèves seront affichés dans le dropdown élève.
-			opt.textContent = c.id_cours;
-
-			// On garde quand même les noms élèves en data-search pour un futur filtre.
-			opt.dataset.search = (String(c.id_cours || '') + ' ' + String(c.eleve || '')).toLowerCase();
-
-			sel.appendChild(opt);
-		});
+		coursOptionsData = js.cours;
+		renderCoursOptions('');
 
 		if (msg) {
 			msg.style.color = '#166534';
@@ -63,6 +145,8 @@ async function chargerCours() {
 			msg.style.color = '#b91c1c';
 			msg.textContent = "⚠️ Erreur réseau pendant le chargement des cours.";
 		}
+
+		sel.innerHTML = '<option value="">-- Erreur de chargement --</option>';
 	}
 }
 
@@ -92,7 +176,9 @@ async function chargerEleves(idCours) {
 
 			if (msg) {
 				msg.style.color = '#b91c1c';
-				msg.textContent = "⚠️ Aucun élève trouvé pour ce cours.";
+				msg.textContent = js && js.error
+					? js.error
+					: "⚠️ Aucun élève trouvé pour ce cours.";
 			}
 
 			return;
@@ -177,7 +263,9 @@ async function chargerBilanEleve(idAcces) {
 
 			if (msg) {
 				msg.style.color = '#b91c1c';
-				msg.textContent = js && js.error ? js.error : "Impossible de charger le bilan IA.";
+				msg.textContent = js && js.error
+					? js.error
+					: "Impossible de charger le bilan IA.";
 			}
 
 			return;
@@ -236,6 +324,7 @@ async function chargerBilanEleve(idAcces) {
 
 	} catch (e) {
 		console.error(e);
+
 		contenu.innerHTML = '<p>⚠️ Erreur réseau pendant le chargement du bilan IA.</p>';
 
 		if (msg) {
@@ -324,24 +413,22 @@ async function envoyerConsigne() {
 document.addEventListener('DOMContentLoaded', () => {
 	chargerCours();
 
-	const coursSelect = document.getElementById('cours');
+	const coursSearch = document.getElementById('cours-search');
 
-	if (coursSelect) {
-		coursSelect.addEventListener('change', (e) => {
-			const idCours = e.target.value;
+	if (coursSearch) {
+		coursSearch.addEventListener('input', () => {
+			const hiddenCours = document.getElementById('cours');
 
-			const eleveSelect = document.getElementById('eleve');
-			if (eleveSelect) {
-				eleveSelect.innerHTML = '<option value="">-- Sélectionnez un élève --</option>';
+			if (hiddenCours) {
+				hiddenCours.value = '';
 			}
 
-			const bloc = document.getElementById('bilan-ia-eleve');
-			const contenu = document.getElementById('bilan-ia-contenu');
+			resetEleveEtBilan();
+			renderCoursOptions(coursSearch.value);
+		});
 
-			if (bloc) bloc.style.display = 'none';
-			if (contenu) contenu.innerHTML = 'Sélectionnez un élève pour afficher son bilan IA.';
-
-			chargerEleves(idCours);
+		coursSearch.addEventListener('focus', () => {
+			renderCoursOptions(coursSearch.value);
 		});
 	}
 
@@ -354,11 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (idAcces) {
 				chargerBilanEleve(idAcces);
 			} else {
-				const bloc = document.getElementById('bilan-ia-eleve');
-				const contenu = document.getElementById('bilan-ia-contenu');
-
-				if (bloc) bloc.style.display = 'none';
-				if (contenu) contenu.innerHTML = 'Sélectionnez un élève pour afficher son bilan IA.';
+				resetEleveEtBilan();
 			}
 		});
 	}

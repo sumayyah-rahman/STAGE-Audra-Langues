@@ -81,6 +81,6 @@ require_once __DIR__ . '/session_eleve.php';
         </section>
     </div>
 	<script src="./assets/js/navbar_eleve.js"></script>
-    <script src="./assets/js/widget_ai_eleve.js?v=22"></script>
+    <script src="./assets/js/widget_ai_eleve.js?v=70"></script>
 </body>
 </html>

@@ -19,7 +19,12 @@ if (!$conn) {
     exit;
 }
 
-audra_guard_prof_page($conn, ['as_json' => true]);
+audra_guard_prof_page($conn, [
+    'as_json'             => true,
+    'allow_blocked'       => true,
+    'allow_portal_closed' => true,
+    'allow_correction'    => true,
+]);
 
 $PROF = strtoupper(trim((string)($_SESSION['display'] ?? '')));
 $nom = strtoupper(trim((string)($_SESSION['lastname'] ?? '')));

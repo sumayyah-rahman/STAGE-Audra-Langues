@@ -27,8 +27,6 @@ if (!$conn) {
     die('❌ Connexion SQL impossible');
 }
 
-// acah2 nak selit code kat sini
-
 audra_guard_prof_page($conn, [
     'allow_blocked'       => true,
     'allow_portal_closed' => true,
@@ -102,6 +100,42 @@ function h(?string $s): string {
 				max-height: 420px;
 			}
 		}
+		
+		#cours-list li {
+			border-bottom: 1px solid #e5e7eb;
+			background: #f9fafb;
+		}
+
+		#cours-list li:last-child {
+			border-bottom: none;
+		}
+
+		#cours-list button {
+			width: 100%;
+			display: block;
+			padding: 10px 12px;
+			border: none;
+			background: transparent;
+			text-align: left;
+			cursor: pointer;
+			font-size: 14px;
+			color: #111827;
+		}
+
+		#cours-list button:hover {
+			background: #eff6ff;
+		}
+
+		#cours-list .cours-numero {
+			font-weight: 700;
+			color: #2563eb;
+		}
+
+		#cours-list .cours-eleve {
+			font-size: 12px;
+			color: #6b7280;
+			margin-top: 2px;
+		}
 	</style>
 </head>
 
@@ -135,11 +169,20 @@ function h(?string $s): string {
 
 			<div class="consigne-left">
 				<form id="consigne-form" class="consigne-form">
-					<label class="etape" for="cours">1) Sélectionner un cours</label><br>
-					<select id="cours" name="id_cours" required>
-						<option value="">-- Sélectionnez un cours --</option>
-					</select>
-					<br><br>
+				<label class="etape" for="cours-search">1) Rechercher un cours</label><br>
+
+				<input
+					type="text"
+					id="cours-search"
+					placeholder="Tapez un numéro de cours ou un nom d’élève..."
+					autocomplete="off"
+					style="width:100%; max-width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; margin-bottom:8px;"
+				>
+
+				<input type="hidden" id="cours" name="id_cours" required>
+
+				<ul id="cours-list" style="list-style:none; padding:0; margin:0 0 16px 0; max-height:260px; overflow-y:auto; border:1px solid #d1d5db; border-radius:8px; display:none;">
+				</ul>
 
 					<label class="etape" for="eleve">2) Sélectionner un élève</label><br>
 					<select id="eleve" name="eleve" required>
@@ -175,6 +218,6 @@ function h(?string $s): string {
 		</div>
     </div>
 	
-    <script src="./assets/js/consigne_ia_prof.js?v=7"></script>
+    <script src="./assets/js/consigne_ia_prof.js?v=9"></script>
 </body>
 </html>
